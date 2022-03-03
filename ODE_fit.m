@@ -2,7 +2,7 @@ function err = ODE_fit(data_v, data_m, data_nk, data_t, data_te, parFit)
 
     % translate parFit to par in the odes
     par = parFit;
-    for i = [(1:14), (20:30)]
+    for i = [(1:14), (20:34)]
         par(i) = 10 .^ parFit(i);
     end
     
@@ -11,6 +11,13 @@ function err = ODE_fit(data_v, data_m, data_nk, data_t, data_te, parFit)
     tspan = 0:1:tmax;
     y0 = [10^7, 40, 0, 0, 0, 0, 0, 0];
     [t, y] = ode45(@ODE_IAV, tspan, y0, [], par);
+    
+    % Calcute the actual number of immune cells
+    % by adding the baseline cell numbers
+    y(:, 5) = y(:, 5) + par(31);
+    y(:, 6) = y(:, 6) + par(32);
+    y(:, 7) = y(:, 7) + par(33);
+    y(:, 8) = y(:, 8) + par(34);
 
     err = 0;
     
