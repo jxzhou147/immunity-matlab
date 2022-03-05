@@ -30,7 +30,7 @@ par0 = par_bound(:, 3);
 lbFit = lb;
 ubFit = ub;
 parFit0 = par0;
-for i = [(1:14), (20:34)]
+for i = [(1:15), (22:37)]
     lbFit(i) = Safe_log10(lb(i));
     ubFit(i) = Safe_log10(ub(i));
     parFit0(i) = Safe_log10(par0(i));
@@ -45,8 +45,10 @@ ini_tem = ones(1, length(par0)) * 100;
 options = optimoptions('simulannealbnd','PlotFcns',...
           {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
           'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
-          'HybridFcn', {@fmincon}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 500);
+          'HybridFcn', {@fmincon}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 1000);
 par_est = simulannealbnd(FitFcn, parFit0, lbFit, ubFit, options);
 
 options_fmin = optimset('PlotFcns',@optimplotfval);
 [p, fminres] = fminsearch(FitFcn, par_est, options_fmin);
+
+save('best_par.txt', 'p', '-ascii');

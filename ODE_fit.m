@@ -2,7 +2,7 @@ function err = ODE_fit(data_v, data_m, data_nk, data_t, data_te, parFit)
 
     % translate parFit to par in the odes
     par = parFit;
-    for i = [(1:14), (20:34)]
+    for i = [(1:15), (22:37)]
         par(i) = 10 .^ parFit(i);
     end
     
@@ -14,10 +14,14 @@ function err = ODE_fit(data_v, data_m, data_nk, data_t, data_te, parFit)
     
     % Calcute the actual number of immune cells
     % by adding the baseline cell numbers
-    y(:, 5) = y(:, 5) + par(31);
-    y(:, 6) = y(:, 6) + par(32);
-    y(:, 7) = y(:, 7) + par(33);
-    y(:, 8) = y(:, 8) + par(34);
+    par(34) = 10000;
+    par(35) = 10000;
+    par(36) = 10000;
+    par(37) = 0;
+    y(:, 5) = y(:, 5) + par(34);
+    y(:, 6) = y(:, 6) + par(35);
+    y(:, 7) = y(:, 7) + par(36);
+    y(:, 8) = y(:, 8) + par(37);
 
     err = 0;
     
@@ -38,10 +42,10 @@ function err = ODE_fit(data_v, data_m, data_nk, data_t, data_te, parFit)
     end
      
     % cost function of T and TE
-%     for i = 1:2
-%         ind = t == data_t(1, i);
-%         err = err + ((y(ind, 7) - data_t(2, i)) / max(data_t(2, :))) ^ 2;
-%         err = err + ((y(ind, 8) - data_te(2, i)) / max(data_te(2, :))) ^ 2;
-%     end
+    for i = 1:2
+        ind = t == data_t(1, i);
+        err = err + ((y(ind, 7) - data_t(2, i)) / max(data_t(2, :))) ^ 2;
+        err = err + ((y(ind, 8) - data_te(2, i)) / max(data_te(2, :))) ^ 2;
+    end
 
 end

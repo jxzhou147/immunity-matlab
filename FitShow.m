@@ -22,7 +22,7 @@ parFit = load('best_par.txt');
 
 % translate parFit to par in the odes
 par = parFit;
-for i = [(1:14), (20:34)]
+for i = [(1:15), (22:37)]
     par(i) = 10 .^ parFit(i);
 end
 
@@ -34,38 +34,85 @@ y0 = [10^7, 40, 0, 0, 0, 0, 0, 0];
 
 % Calcute the actual number of immune cells
 % by adding the baseline cell numbers
-y(:, 5) = y(:, 5) + par(31);
-y(:, 6) = y(:, 6) + par(32);
-y(:, 7) = y(:, 7) + par(33);
-y(:, 8) = y(:, 8) + par(34);
+par(34) = 10000;
+par(35) = 10000;
+par(36) = 10000;
+par(37) = 0;
+y(:, 5) = y(:, 5) + par(34);
+y(:, 6) = y(:, 6) + par(35);
+y(:, 7) = y(:, 7) + par(36);
+y(:, 8) = y(:, 8) + par(37);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % plot figures
 figure;
-subplot(4,2,1); hold on; set(gca,'Fontsize',26); box on;
-plot(tspan, log10(y(:, 1)), 'k', 'LineWidth', 2);
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+plot(tspan, log10(y(:, 1)), 'k', 'LineWidth', 2); hold on;
+xlabel('Time (h)'); ylabel('H (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold on;
 
-subplot(4,2,2); hold on; set(gca,'Fontsize',26); box on;
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 plot(tspan, log10(y(:, 2)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('I (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
 
-subplot(4,2,3); hold on; set(gca,'Fontsize',26); box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_v(1, :), log10(data_v(2, :)));   hold on;
 plot(tspan, log10(y(:, 3)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold on;
 
-subplot(4,2,4); hold on; set(gca,'Fontsize',26); box on;
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 plot(tspan, log10(y(:, 4)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('D (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
 
-subplot(4,2,5); hold on; set(gca,'Fontsize',26); box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_m(1, :), log10(data_m(2, :)));   hold on;
 plot(tspan, log10(y(:, 5)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('M (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold on;
 
-subplot(4,2,6); hold on; set(gca,'Fontsize',26); box on;
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_nk(1, :), log10(data_nk(2, :)));   hold on;
 plot(tspan, log10(y(:, 6)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('NK (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
 
-subplot(4,2,7); hold on; set(gca,'Fontsize',26); box on;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_t(1, :), log10(data_t(2, :)));   hold on;
 plot(tspan, log10(y(:, 7)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('CD8T (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold on;
 
-subplot(4,2,8); hold on; set(gca,'Fontsize',26); box on;
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_te(1, :), log10(data_te(2, :)));   hold on;
 plot(tspan, log10(y(:, 8)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('Effector CD8T (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
