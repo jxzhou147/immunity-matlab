@@ -5,8 +5,8 @@ function dydt = ODE_IAV(t, y, par)
     % parameters
     par = num2cell(par(1:30));
     [beta, gamma, eta, alpha_MH, alpha_MI, alpha_KI, alpha_TI, ...
-        alpha_MV, c_IM, c_DM, c_M, c_IK, c_MK, c_MT, n_IM, n_DM, ...
-        n_IK, n_MK, n_MT, K_IM, K_DM, K_M, K_IK, K_MK, K_MT, K_T, ...
+        alpha_MV, c_IM, c_DM, c_M, c_IK, c_MK, c_MT, c_IT, n_IM, n_DM, ...
+        n_IK, n_MK, n_MT, n_IT, K_IM, K_DM, K_M, K_IK, K_MK, K_MT, K_IT, K_T, ...
         d_I, d_M, d_K, d_T] = deal(par{:});
     
     % variables
@@ -19,7 +19,8 @@ function dydt = ODE_IAV(t, y, par)
         H = 0;
         dydt(1) = 0;
     else
-        dydt(1) = -1 * beta * H * V - alpha_MH * M * H;
+        dydt(1) = -1 * beta * H * V;
+        %dydt(1) = -1 * beta * H * V - alpha_MH * M * H;
     end
 
     % dI/dt
@@ -50,9 +51,10 @@ function dydt = ODE_IAV(t, y, par)
         M = 0;
         dydt(5) = 0;
     else
-        dydt(5) = c_IM * FracNoInf(RealRootPromise(If, n_IM), (RealRootPromise(K_IM, n_IM) + RealRootPromise(If, n_IM))) ... 
-            + c_DM * FracNoInf(RealRootPromise(D, n_DM), (RealRootPromise(K_DM, n_DM) + RealRootPromise(D, n_DM))) ...
+        dydt(5) = c_IM * FracNoInf(RealRootPromise(If, n_IM), (RealRootPromise(K_IM, n_IM) + RealRootPromise(If, n_IM))) ...
             + c_M * FracNoInf(M, (K_M + M)) - d_M * M;
+            %+ c_DM * FracNoInf(RealRootPromise(D, n_DM), (RealRootPromise(K_DM, n_DM) + RealRootPromise(D, n_DM))) ...
+            
     end
 
     if K < 0
@@ -67,7 +69,8 @@ function dydt = ODE_IAV(t, y, par)
         T = 0;
         dydt(7) = 0;
     else
-        dydt(7) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
+        dydt(7) = c_IT * FracNoInf(RealRootPromise(I, n_IT), (RealRootPromise(K_IT, n_IT) + RealRootPromise(I, n_IT))) ...
+            + eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
             FracNoInf(RealRootPromise(M, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(M, n_MT))) * T;
     end
 
