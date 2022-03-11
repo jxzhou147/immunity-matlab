@@ -18,7 +18,7 @@ data_te(2, :) = data_te(2, :) .* 10 ^ 5;
 data_v(2, :) = 10 .^ data_v(2, :);
 
 % load fitted parameter set
-parFit = importdata('best_par.txt');
+parFit = importdata('best_par_last.txt');
 parFit = parFit.data;
 
 % translate parFit to par in the odes
@@ -62,8 +62,14 @@ scatter(data_v(1, :), Safe_log10(data_v(2, :)));   hold on;
 plot(tspan, Safe_log10(y(:, 3)), 'k', 'LineWidth', 2);
 xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)');
 set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
+hold on;
 
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+scatter(data_te(1, :), Safe_log10(data_te(2, :)));   hold on;
+plot(tspan, Safe_log10(y(:, 7)), 'k', 'LineWidth', 2);
+xlabel('Time (h)'); ylabel('Effector CD8T (log_{10} cells)');
+set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure;
@@ -85,20 +91,20 @@ set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 2
 hold off;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure;
-xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-hold on;
-subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_t(1, :), Safe_log10(data_t(2, :)));   hold on;
-plot(tspan, Safe_log10(y(:, 6)), 'k', 'LineWidth', 2);
-xlabel('Time (h)'); ylabel('CD8T (log_{10} cells)');
-set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold on;
-
-subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_te(1, :), Safe_log10(data_te(2, :)));   hold on;
-plot(tspan, Safe_log10(y(:, 7)), 'k', 'LineWidth', 2);
-xlabel('Time (h)'); ylabel('Effector CD8T (log_{10} cells)');
-set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
+% figure;
+% xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+% hold on;
+% subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+% scatter(data_t(1, :), Safe_log10(data_t(2, :)));   hold on;
+% plot(tspan, Safe_log10(y(:, 6)), 'k', 'LineWidth', 2);
+% xlabel('Time (h)'); ylabel('CD8T (log_{10} cells)');
+% set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold on;
+% 
+% subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+% scatter(data_te(1, :), Safe_log10(data_te(2, :)));   hold on;
+% plot(tspan, Safe_log10(y(:, 7)), 'k', 'LineWidth', 2);
+% xlabel('Time (h)'); ylabel('Effector CD8T (log_{10} cells)');
+% set(gca, 'XTick', [0:100:200], 'XLim', [-5 260], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold off;

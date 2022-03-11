@@ -37,11 +37,13 @@ for i = [(1:12), (17:27)]
 end
 
 % optimize using simulannealbnd
+hybridopts = optimoptions('fminunc', 'Display','iter');
+
 ini_tem = ones(1, length(par0)) * 100;
 options = optimoptions('simulannealbnd','PlotFcns',...
           {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
           'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
-          'HybridFcn', {@fmincon}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 1000);
+          'HybridFcn', {@fmincon, hybridopts}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 1000);
 par_est = simulannealbnd(FitFcn, parFit0, lbFit, ubFit, options);
 
 % optimize using fminsearch
