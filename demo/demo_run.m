@@ -50,11 +50,11 @@ function dydt = demo(t, y, par)
     theta = par(8);
     eta = 1 * (sin(2*pi * t + theta)) +1;
     
-    if (t > 0.25)
-        eta = 1;
-    end
-    
-    
+%     if (t > 0.25)
+%         eta = 1;
+%     end
+%     
+%     
     if v < 1e-1
         v = 0;
         dydt(1) = 0;

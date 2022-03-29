@@ -34,7 +34,7 @@ for clock = pi / 2:pi:2*pi
     tspan = 0:1:tmax;
     y0 = [10^7, 40, 0, 1000000, 0, 1000, 0];
     [t, y] = ode45(@ODE_IAV_test, tspan, y0, [], par);
-    plot(tspan, y(:, 3), 'k', 'LineWidth', 2);
+    plot(tspan, y(:, 4), 'k', 'LineWidth', 2);
     hold on;
     pause(0.1);
 end
