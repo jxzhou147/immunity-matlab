@@ -23,7 +23,7 @@ data_te(3, :) = data_te(3, :) .* 10 ^ 5;
 data_v(3, :) = 10 .^ data_v(3, :);
 
 % load fitted parameter set
-parFit = importdata('best_par_IAV_clock.txt');
+parFit = importdata('test_of_best_par_IAV_clock.txt');
 parFit = parFit.data;
 
 % translate parFit to par in the odes

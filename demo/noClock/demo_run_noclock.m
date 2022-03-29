@@ -1,20 +1,18 @@
 clear;clc
 
 figure;
-for theta = -pi/2:pi:pi/2
-    v0 = 1000;
+for theta = 0.5:0.5:1.5
+    v0 = 10;
     e0 = 1e6;
 
-    par = [2e-2; e0; 10 ^ 6; 10; 1e-6; 1; 2.7e3; theta];
+    par = [2e-2; e0; 10 ^ 6; 4.4; 1.24e-6; 0.33; 2.7e3; theta];
 
     tspan = 0:0.1:10;
     y0 = [v0; e0];
     [t, y] = ode45(@demo, tspan, y0, [], par);
 
 %     plot(t, y(:, 1));
-    plot(t, y(:, 1), 'LineWidth', 2);
-    set(gca,'Fontsize',26); box on;
-    xlabel('t (day)'); ylabel('V');
+    plot(t, y(:, 2));
     hold on;
     pause(1);
     drawnow;
@@ -48,26 +46,26 @@ function dydt = demo(t, y, par)
     ke = par(7);
     
     theta = par(8);
-    eta = 1 * (sin(2*pi * t + theta)) +1;
+%     eta = 0.5 * (sin(2*pi * t + theta)) +1;
     
-    if (t > 0.25)
-        eta = 1;
-    end
+%     if (t > 1)
+%         eta = 1;
+%     end
     
     
     if v < 1e-1
         v = 0;
         dydt(1) = 0;
     else
-%         dydt(1) = (1 + (theta - 1) * 0.4) * p * v * (1 - v / kv) - cv * v * e;
-        dydt(1) =  eta * p * v * (1 - v / kv) - cv * v * e;
+        dydt(1) = (1 + (theta - 1) * 0.4) * p * v * (1 - v / kv) - cv * v * e;
+%         dydt(1) = p * v * (1 - v / kv) - cv * v * e;
     end
     
     if e < 1e-1
         e = 0;
         dydt(2) = 0;
     else
-        dydt(2) = eta * r * e * (v / (v + ke)) - ce * e + ce * e0;
+        dydt(2) = theta * r * e * (v / (v + ke)) - ce * e + ce * e0;
     end
     
 end

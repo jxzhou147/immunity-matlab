@@ -3,7 +3,7 @@ clear;clc
 omega = 2 * pi / 24;
 I0 = 10;
 k = 1;
-d = 0.2;
+d = 0.03;
 t01 = 6;
 t02 = 18;
 
@@ -13,13 +13,13 @@ par2 = [omega; t02; I0; d; k];
 tspan = 0:1:100;
 y0 = 0;
 
-[t, y1] = ode45(@demo, tspan, y0, [], par1);
-[t, y2] = ode45(@demo, tspan, y0, [], par2);
+[t, y1] = ode45(@demo1, tspan, y0, [], par1);
+[t, y2] = ode45(@demo1, tspan, y0, [], par2);
 
 plot(t, y1, t - 12, y2);
 
 
-function dydt = demo(t, y, par)
+function dydt = demo1(t, y, par)
     
     omega = par(1);
     t0 = par(2);
@@ -37,3 +37,4 @@ function dydt = demo(t, y, par)
         dydt = k * I - d * y;
     end
 end
+
