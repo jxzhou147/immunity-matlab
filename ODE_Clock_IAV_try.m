@@ -138,7 +138,7 @@ function dydt = ODE_Clock_IAV_try(t, y, par_clock, par_IAV, t_IAV)
 %         end
         dydt(16) = FracNoInf(K_B, K_B + BMAL1) * c_IM * ...
             FracNoInf(RealRootPromise(If, n_IM), (RealRootPromise(K_IM, n_IM) + RealRootPromise(If, n_IM))) ...
-            + c_M * FracNoInf(M, (K_M + M)) - 0.8 * d_M * M;
+            +  c_M * FracNoInf(M, (K_M + M)) - 0.8 * d_M * M;
     end
 
     if (K < 0) || (t < t_IAV)

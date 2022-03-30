@@ -56,85 +56,85 @@ y_11 = real(y_11);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% plot figures
-figure;
-xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-hold on;
-subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
-plot(tspan, Safe_log10(y_23(:, 13)), 'b', 'LineWidth', 2); hold on;
-plot(tspan - 12, Safe_log10(y_11(:, 13)), 'r', 'LineWidth', 2); hold on;
-xlabel('Time (h)'); ylabel('H (log_{10} cells)');
-set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold on;
-
-subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
-plot(tspan, Safe_log10(y_23(:, 14)), 'b', 'LineWidth', 2);  hold on;
-plot(tspan - 12, Safe_log10(y_11(:, 14)), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('I (log_{10} cells)');
-set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure;
-xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-hold on;
-subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_v(1, :) + t_IAV_23, Safe_log10(data_v(2, :)), 'b');   hold on;
-plot(tspan, Safe_log10(y_23(:, 15)), 'b', 'LineWidth', 2);  hold on;
-scatter(data_v(1, :) + t_IAV_11 - 12, Safe_log10(data_v(3, :)), 'r');   hold on;
-plot(tspan - 12, Safe_log10(y_11(:, 15)), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on;
-set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold on;
-
-subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+% % plot figures
+% figure;
+% xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+% hold on;
+% subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+% plot(tspan, Safe_log10(y_23(:, 13)), 'b', 'LineWidth', 2); hold on;
+% plot(tspan - 12, Safe_log10(y_11(:, 13)), 'r', 'LineWidth', 2); hold on;
+% xlabel('Time (h)'); ylabel('H (log_{10} cells)');
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold on;
+% 
+% subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+% plot(tspan, Safe_log10(y_23(:, 14)), 'b', 'LineWidth', 2);  hold on;
+% plot(tspan - 12, Safe_log10(y_11(:, 14)), 'r', 'LineWidth', 2);  hold on;
+% xlabel('Time (h)'); ylabel('I (log_{10} cells)');
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold off;
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% figure;
+% xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+% hold on;
+% subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+% scatter(data_v(1, :) + t_IAV_23, Safe_log10(data_v(2, :)), 'b');   hold on;
+% plot(tspan, Safe_log10(y_23(:, 15)), 'b', 'LineWidth', 2);  hold on;
+% scatter(data_v(1, :) + t_IAV_11 - 12, Safe_log10(data_v(3, :)), 'r');   hold on;
+% plot(tspan - 12, Safe_log10(y_11(:, 15)), 'r', 'LineWidth', 2);  hold on;
+% xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on;
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold on;
+% 
+% subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+% % scatter(data_te(1, :) + t_IAV_23, Safe_log10(data_te(2, :)), 'b');   hold on;
+% % plot(tspan, Safe_log10(y_23(:, 19)), 'b', 'LineWidth', 2);  hold on;
+% % scatter(data_te(1, :) + t_IAV_11, Safe_log10(data_te(3, :)), 'r');   hold on;
+% % plot(tspan, Safe_log10(y_11(:, 19)), 'r', 'LineWidth', 2);  hold on;
 % scatter(data_te(1, :) + t_IAV_23, Safe_log10(data_te(2, :)), 'b');   hold on;
 % plot(tspan, Safe_log10(y_23(:, 19)), 'b', 'LineWidth', 2);  hold on;
-% scatter(data_te(1, :) + t_IAV_11, Safe_log10(data_te(3, :)), 'r');   hold on;
-% plot(tspan, Safe_log10(y_11(:, 19)), 'r', 'LineWidth', 2);  hold on;
-scatter(data_te(1, :) + t_IAV_23, Safe_log10(data_te(2, :)), 'b');   hold on;
-plot(tspan, Safe_log10(y_23(:, 19)), 'b', 'LineWidth', 2);  hold on;
-scatter(data_te(1, :) + t_IAV_11 - 12, Safe_log10(data_te(3, :)), 'r');   hold on;
-plot(tspan - 12, Safe_log10(y_11(:, 19)), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('CD8T_E (log_{10} cells)');
-set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure;
-xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-hold on;
-subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_m(1, :) + t_IAV_23, data_m(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 16), 'b', 'LineWidth', 2);  hold on;
-scatter(data_m(1, :) + t_IAV_11 - 12, data_m(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 16), 'r', 'LineWidth', 2);  hold on;
-% scatter(data_m(1, :) + t_IAV_23, Safe_log10(data_m(2, :)), 'b');   hold on;
-% plot(tspan, Safe_log10(y_23(:, 16)), 'b', 'LineWidth', 2);  hold on;
-% scatter(data_m(1, :) + t_IAV_11, Safe_log10(data_m(3, :)), 'r');   hold on;
-% plot(tspan, Safe_log10(y_11(:, 16)), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('M (cells)');
-set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'Fontsize', 26, 'linewidth', 2);
-%set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold on;
-
-subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_nk(1, :) + t_IAV_23, data_nk(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 17), 'b', 'LineWidth', 2);  hold on;
-scatter(data_nk(1, :) + t_IAV_11, data_nk(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 17), 'r', 'LineWidth', 2);  hold on;
-% scatter(data_nk(1, :) + t_IAV_23, Safe_log10(data_nk(2, :)), 'b');   hold on;
-% plot(tspan, Safe_log10(y_23(:, 17)), 'b', 'LineWidth', 2);  hold on;
-% scatter(data_nk(1, :) + t_IAV_11, Safe_log10(data_nk(3, :)), 'r');   hold on;
-% plot(tspan, Safe_log10(y_11(:, 17)), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('NK (cells)');
-set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'Fontsize', 26, 'linewidth', 2);
-%set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
+% scatter(data_te(1, :) + t_IAV_11 - 12, Safe_log10(data_te(3, :)), 'r');   hold on;
+% plot(tspan - 12, Safe_log10(y_11(:, 19)), 'r', 'LineWidth', 2);  hold on;
+% xlabel('Time (h)'); ylabel('CD8T_E (log_{10} cells)');
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold off;
+% 
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% figure;
+% xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+% hold on;
+% subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+% scatter(data_m(1, :) + t_IAV_23, data_m(2, :), 'b');   hold on;
+% plot(tspan, y_23(:, 16), 'b', 'LineWidth', 2);  hold on;
+% scatter(data_m(1, :) + t_IAV_11 - 12, data_m(3, :), 'r');   hold on;
+% plot(tspan - 12, y_11(:, 16), 'r', 'LineWidth', 2);  hold on;
+% % scatter(data_m(1, :) + t_IAV_23, Safe_log10(data_m(2, :)), 'b');   hold on;
+% % plot(tspan, Safe_log10(y_23(:, 16)), 'b', 'LineWidth', 2);  hold on;
+% % scatter(data_m(1, :) + t_IAV_11, Safe_log10(data_m(3, :)), 'r');   hold on;
+% % plot(tspan, Safe_log10(y_11(:, 16)), 'r', 'LineWidth', 2);  hold on;
+% xlabel('Time (h)'); ylabel('M (cells)');
+% set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'Fontsize', 26, 'linewidth', 2);
+% %set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold on;
+% 
+% subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+% scatter(data_nk(1, :) + t_IAV_23, data_nk(2, :), 'b');   hold on;
+% plot(tspan, y_23(:, 17), 'b', 'LineWidth', 2);  hold on;
+% scatter(data_nk(1, :) + t_IAV_11, data_nk(3, :), 'r');   hold on;
+% plot(tspan - 12, y_11(:, 17), 'r', 'LineWidth', 2);  hold on;
+% % scatter(data_nk(1, :) + t_IAV_23, Safe_log10(data_nk(2, :)), 'b');   hold on;
+% % plot(tspan, Safe_log10(y_23(:, 17)), 'b', 'LineWidth', 2);  hold on;
+% % scatter(data_nk(1, :) + t_IAV_11, Safe_log10(data_nk(3, :)), 'r');   hold on;
+% % plot(tspan, Safe_log10(y_11(:, 17)), 'r', 'LineWidth', 2);  hold on;
+% xlabel('Time (h)'); ylabel('NK (cells)');
+% set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'Fontsize', 26, 'linewidth', 2);
+% %set(gca, 'XTick', [100:250:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+% hold off;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
