@@ -1,6 +1,6 @@
 function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
     
-    dydt = zeros(19, 1);
+    dydt = zeros(25, 1);
     
     % variables of clock_IAV model
     y_cell = num2cell(y);
@@ -44,14 +44,15 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
     
     % parameters of IAV model
     par_IAV = num2cell(par_IAV);
-    [r_H, beta, gamma, eta, ...
+    [beta, gamma, eta, ...
         a_NH, a_MI, a_NI, a_KI, a_TI, a_NV, ...
         c_IL6_M, c_CCL2_M, c_CXCL5_N, c_M_IL6, c_K_IL6, c_N_IL6, c_I_IL6, ...
         c_IM, c_DM, c_M_IL10, c_M_CCL2, c_I_CCL2, c_M_CXCL5, c_I_CXCL5, c_IK, c_CCL2_K, c_MT, ...
         K_IL6_M, K_IM, K_DM, K_CCL2_M, K_CXCL5_N, K_IL10_IL6, K_IL10_CCL2, ...
         K_IL10_CXCL5, K_IK, K_CCL2_K, K_T, K_MT, ...
         n_IM, n_DM, n_CCL2_M, n_CXCL5_N, n_IK, n_CCL2_K, n_MT, ...
-        d_H, d_I, d_V, d_M, d_N, d_IL6, d_IL10, d_CCL2, d_CXCL5, d_K, d_T, b_M, ...
+        d_H, d_I, d_V, d_M, d_N, d_IL6, d_IL10, d_CCL2, d_CXCL5, d_K, d_T, ...
+        b_H, b_M, b_N, b_K, ...
         K_B_M, K_BMAL1_IL6, c_P_K, K_P_K, K_REV_V, K_REV_IL6, K_REV_IL10, ...
         K_REV_CCL2, K_REV_CXCL5, c_ROR_IL6, K_ROR_IL6, c_IL6_REV, K_IL6_REV, n_IL6_REV] = deal(par_IAV{:});
     
@@ -103,110 +104,118 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
 
     dydt(12) = kass_cb * BMAL1 - kdiss_cb * CLOCK_BMAL1 - d_cb * CLOCK_BMAL1;
     
+
     % equations of clock-controlled IAV model
-    if (H < 0) || (t < t_IAV)
-        H = 0;
-        dydt(13) = 0;
+    if (t <t_IAV)
+        for i = 13:25
+            dydt(i) = 0;
+        end
     else
-        dydt(13) = r_H - beta * H * V - a_NH * N * H - d_H * H;
-    end
+        if (H < 0)
+            H = 0;
+            dydt(13) = 0;
+        else
+            dydt(13) = d_H * b_H - beta * H * V - a_NH * (N - b_N) * H - d_H * H;
+        end
+    
 
-    if (If < 0) || (t < t_IAV)
-        If = 0;
-        dydt(14) = 0;
-    else
-        dydt(14) = beta * H * V - FracNoInf(K_B_M, (K_B_M + BMAL1)) * (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If - ...
-            a_NI * N * If - (1 + FracNoInf(c_P_K * PER, (K_P_K + PER))) * a_KI * K * If - a_TI * T_E * If - d_I * If;
-    end
-    
-    if (D < 0) || (t < t_IAV)
-        D = 0;
-        dydt(15) = 0;
-    else
-        dydt(15) = FracNoInf(K_B_M, (K_B_M + BMAL1)) * (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If + ...
-            a_NI * N * If + (1 + FracNoInf(c_P_K * PER, (K_P_K + PER))) * a_KI * K * If + a_TI * T_E * If + d_I * If + ...
-            a_NH * N * H + d_H * H;
-    end
+        if (If < 0)
+            If = 0;
+            dydt(14) = 0;
+        else
+            dydt(14) = beta * H * V - FracNoInf(K_B_M, (K_B_M + BMAL1)) * (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If - ...
+                a_NI * N * If - (1 + FracNoInf(c_P_K * PER, (K_P_K + PER))) * a_KI * K * If - a_TI * T_E * If - d_I * If;
+        end
 
-    if (V < 0) || (t < t_IAV)
-        V = 0;
-        dydt(16) = 0;
-    else
-        dydt(16) = FracNoInf(K_REV_V, (K_REV_V + REV)) * gamma * If - a_NV * N * V - d_V * V;
-    end
-    
-    if (M < 0) || (t < t_IAV)
-        M = 0;
-        dydt(17) = 0;
-    else
-        dydt(17) = c_IM * FracNoInf(RealRootPromise(If, n_IM), (RealRootPromise(K_IM, n_IM) + RealRootPromise(If, n_IM))) + ...
-            c_DM * FracNoInf(RealRootPromise(D, n_DM), (RealRootPromise(K_DM, n_DM) + RealRootPromise(D, n_DM))) + ...
-            c_CCL2_M * FracNoInf(RealRootPromise(CCL2, n_CCL2_M), (RealRootPromise(K_CCL2_M, n_CCL2_M) + RealRootPromise(CCL2, n_CCL2_M))) - ...
-            d_M * (M - b_M);
-    end
-    
-    if (N < 0) || (t < t_IAV)
-        N = 0;
-        dydt(18) = 0;
-    else
-        dydt(18) = c_CXCL5_N * FracNoInf(RealRootPromise(CXCL5, n_CXCL5_N), (RealRootPromise(K_CXCL5_N, n_CXCL5_N) + RealRootPromise(CXCL5, n_CXCL5_N))) - ...
-            d_N * N;
-    end
-    
-    if (IL6 < 0) || (t < t_IAV)
-        IL6 = 0;
-        dydt(19) = 0;
-    else
-        dydt(19) =  FracNoInf(K_BMAL1_IL6, K_BMAL1_IL6 + BMAL1) * FracNoInf(K_REV_IL6, K_REV_IL6 +REV) * ...
-            (1 + c_ROR_IL6 * FracNoInf(ROR, K_ROR_IL6 + ROR)) * FracNoInf(K_IL10_IL6, K_IL10_IL6 + IL10) * c_M_IL6 * M + ...
-            c_K_IL6 * K + c_N_IL6 * N + c_I_IL6 * I - d_IL6 * IL6;
-    end
-    
-    if (IL10 < 0) || (t < t_IAV)
-        IL10 = 0;
-        dydt(20) = 0;
-    else
-        dydt(20) = FracNoInf(K_REV_IL10, K_REV_IL10 + REV) * c_M_IL10 * M - d_IL10 * IL10;
-    end
-    
-    if (CCL2 < 0) || (t < t_IAV)
-        CCL2 = 0;
-        dydt(21) = 0;
-    else
-        dydt(21) = FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * M + ...
-            c_I_CCL2 * I - d_CCL2 * CCL2;
-    end
-    
-    if (CXCL5 < 0) || (t < t_IAV)
-        CXCL5 = 0;
-        dydt(22) = 0;
-    else
-        dydt(22) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_M_CXCL5 * M + ...
-            FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * c_I_CXCL5 * I - d_CXCL5 * CXCL5;
-    end
+        if (D < 0)
+            D = 0;
+            dydt(15) = 0;
+        else
+            dydt(15) = FracNoInf(K_B_M, (K_B_M + BMAL1)) * (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If + ...
+                a_NI * N * If + (1 + FracNoInf(c_P_K * PER, (K_P_K + PER))) * a_KI * K * If + a_TI * T_E * If + d_I * If + ...
+                a_NH * (N - b_N) * H + d_H * H;
+        end
 
-    if (K < 0) || (t < t_IAV)
-        K = 0;
-        dydt(23) = 0;
-    else
-        dydt(23) = c_IK * FracNoInf(RealRootPromise(If, n_IK), (RealRootPromise(K_IK, n_IK) + RealRootPromise(If, n_IK))) + ...
-            c_CCL2_K * FracNoInf(RealRootPromise(CCL2, n_CCL2_K), RealRootPromise(K_CCL2_K, n_CCL2_K) + RealRootPromise(CCL2, n_CCL2_K)) ...
-            - d_K * K;
-    end
+        if (V < 0)
+            V = 0;
+            dydt(16) = 0;
+        else
+            dydt(16) = FracNoInf(K_REV_V, (K_REV_V + REV)) * gamma * If - a_NV * N * V - d_V * V;
+        end
 
-    if (T < 0) || (t < t_IAV)
-        T = 0;
-        dydt(24) = 0;
-    else
-        dydt(24) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
-            FracNoInf(RealRootPromise(M, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(M, n_MT))) * T;
-    end
+        if (M < 0)
+            M = 0;
+            dydt(17) = 0;
+        else
+            dydt(17) = b_M * d_M + c_IM * FracNoInf(RealRootPromise(If, n_IM), (RealRootPromise(K_IM, n_IM) + RealRootPromise(If, n_IM))) + ...
+                c_DM * FracNoInf(RealRootPromise(D, n_DM), (RealRootPromise(K_DM, n_DM) + RealRootPromise(D, n_DM))) + ...
+                c_CCL2_M * FracNoInf(RealRootPromise(CCL2, n_CCL2_M), (RealRootPromise(K_CCL2_M, n_CCL2_M) + RealRootPromise(CCL2, n_CCL2_M))) - ...
+                d_M * M;
+        end
 
-    if (T_E < 0) || (t < t_IAV)
-        T_E = 0;
-        dydt(25) = 0;
-    else
-        dydt(25) = c_MT * FracNoInf(RealRootPromise(M, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(M, n_MT))) * T - d_T * T_E;
+        if (N < 0)
+            N = 0;
+            dydt(18) = 0;
+        else
+            dydt(18) = b_N * d_N + c_CXCL5_N * FracNoInf(RealRootPromise(CXCL5, n_CXCL5_N), (RealRootPromise(K_CXCL5_N, n_CXCL5_N) + RealRootPromise(CXCL5, n_CXCL5_N))) - ...
+                d_N * N;
+        end
+
+        if (IL6 < 0)
+            IL6 = 0;
+            dydt(19) = 0;
+        else
+            dydt(19) =  FracNoInf(K_BMAL1_IL6, K_BMAL1_IL6 + BMAL1) * FracNoInf(K_REV_IL6, K_REV_IL6 +REV) * ...
+                (1 + c_ROR_IL6 * FracNoInf(ROR, K_ROR_IL6 + ROR)) * FracNoInf(K_IL10_IL6, K_IL10_IL6 + IL10) * c_M_IL6 * M + ...
+                c_K_IL6 * K + c_N_IL6 * N + c_I_IL6 * If - d_IL6 * IL6;
+        end
+
+        if (IL10 < 0)
+            IL10 = 0;
+            dydt(20) = 0;
+        else
+            dydt(20) = FracNoInf(K_REV_IL10, K_REV_IL10 + REV) * c_M_IL10 * M - d_IL10 * IL10;
+        end
+
+        if (CCL2 < 0)
+            CCL2 = 0;
+            dydt(21) = 0;
+        else
+            dydt(21) = FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * M + ...
+                c_I_CCL2 * If - d_CCL2 * CCL2;
+        end
+
+        if (CXCL5 < 0)
+            CXCL5 = 0;
+            dydt(22) = 0;
+        else
+            dydt(22) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_M_CXCL5 * M + ...
+                FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * c_I_CXCL5 * If - d_CXCL5 * CXCL5;
+        end
+
+        if (K < 0)
+            K = 0;
+            dydt(23) = 0;
+        else
+            dydt(23) = b_K * d_K + c_IK * FracNoInf(RealRootPromise(If, n_IK), (RealRootPromise(K_IK, n_IK) + RealRootPromise(If, n_IK))) + ...
+                c_CCL2_K * FracNoInf(RealRootPromise(CCL2, n_CCL2_K), RealRootPromise(K_CCL2_K, n_CCL2_K) + RealRootPromise(CCL2, n_CCL2_K)) ...
+                - d_K * K;
+        end
+
+        if (T < 0)
+            T = 0;
+            dydt(24) = 0;
+        else
+            dydt(24) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
+                FracNoInf(RealRootPromise(M, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(M, n_MT))) * T;
+        end
+
+        if (T_E < 0)
+            T_E = 0;
+            dydt(25) = 0;
+        else
+            dydt(25) = c_MT * FracNoInf(RealRootPromise(M, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(M, n_MT))) * T - d_T * T_E;
+        end
     end
     
 end
