@@ -32,19 +32,9 @@ ub = par_bound.data(:, 2);
 parFit0 = importdata('best_par_IAV_clock.txt');
 parFit0 = parFit0.data;
 
-% par0 = par_bound(:, 3);
-% % translate initial par of odes to parFit0
-% lbFit = lb;
-% ubFit = ub;
-% parFit0 = par0;
-% for i = [(1:12), (17:27)]
-%     lbFit(i) = Safe_log10(lb(i));
-%     ubFit(i) = Safe_log10(ub(i));
-%     parFit0(i) = Safe_log10(par0(i));
-% end
 
 % optimize using simulannealbnd
-hybridopts = optimoptions('fminunc', 'Display','iter');
+hybridopts = optimoptions('fminunc', 'Display','iter','MaxIterations',100);
 
 ini_tem = ones(1, length(parFit0)) * 100;
 options = optimoptions('simulannealbnd','PlotFcns',...
