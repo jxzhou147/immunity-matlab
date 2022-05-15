@@ -28,8 +28,7 @@ function dydt = ODE_IAV(t, y, par_IAV)
         a_NI * N * If - a_KI * K * If - a_TI * T_E * If - d_I * If;
    
     dydt(3) = (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If + ...
-        a_NI * N * If + a_KI * K * If + a_TI * T_E * If + d_I * If + ...
-        a_NH * (N - b_N) * H + d_H * H;
+        a_NI * N * If + a_KI * K * If + a_TI * T_E * If + d_I * If + d_H * H;
 %     dydt(3) = d_H * b_H - dydt(1) - dydt(2);
 %     dydt(3) = - dydt(1) - dydt(2);
 
