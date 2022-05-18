@@ -27,5 +27,7 @@ function y = solve_odes( par_IAV_ini, par_consider_ind, par_consider )
     
     [t, y] = ode15s(@ODE_IAV, tspan, y0, [], par_IAV);
     
+    y = real(y);
+    
 end
 
