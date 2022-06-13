@@ -13,29 +13,36 @@ data_ccl2 = xlsread('data_to_fit.xlsx', 3, 'B33:E35');
 
 data_v(2:3, :) = 10 .^ data_v(2:3, :);
 
-parBase = [350; 50; 15; 40];
-
-FitFcn = @(parFit)Fit_err_clock_IAV( ...
-    data_h, data_m, data_neu, data_nk, data_v, data_t, data_te, data_il6, data_ccl2, parFit, parBase);
 
 % initial parameters
 par_bound = importdata('par_IAV_clock_bound.txt');
-lb = par_bound.data(1:73, 1);
-ub = par_bound.data(1:73, 2);
+lb = par_bound.data(64:77, 1);
+ub = par_bound.data(64:77, 2);
 
-parFit0 = importdata('best_par_IAV_clock.txt');
-parFit0 = parFit0.data(1:73);
+par = importdata('fit_IAV_ZT11.txt');
+par_IAV_fixed = par.data(1:63);
+parFit0 = par.data(64:77);
 
+% par_bound = importdata('par_IAV_clock_bound.txt');
+% lb = par_bound.data([68; 71], 1);
+% ub = par_bound.data([68; 71], 2);
+% 
+% par = importdata('fit_IAV_ZT11.txt');
+% par_IAV_fixed = par.data([1:67 69:70 72:77]);
+% parFit0 = par.data([68 71]);
+
+FitFcn = @(parFit)Fit_err_clock_IAV( ...
+    data_h, data_m, data_neu, data_nk, data_v, data_t, data_te, data_il6, data_ccl2, par_IAV_fixed, parFit);
 
 % optimize using simulannealbnd
-% hybridopts = optimoptions('fminunc', 'Display','iter','MaxIterations',100);
-% 
-% ini_tem = ones(1, length(parFit0)) * 100;
-% options = optimoptions('simulannealbnd','PlotFcns',...
-%           {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
-%           'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
-%           'HybridFcn', {@fmincon, hybridopts}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 500);
-% par_est = simulannealbnd(FitFcn, parFit0, lb, ub, options);
+hybridopts = optimoptions('fminunc', 'Display','iter','MaxIterations',10);
+
+ini_tem = ones(1, length(parFit0)) * 100;
+options = optimoptions('simulannealbnd','PlotFcns',...
+          {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
+          'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
+          'HybridFcn', {@fmincon, hybridopts}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 1000);
+par_est = simulannealbnd(FitFcn, parFit0, lb, ub, options);
 
 
 % optimize using fminsearch
@@ -50,17 +57,17 @@ par_name = char('beta', 'gamma', 'eta', 'a_NH', 'a_MI', 'a_NI', 'a_KI', ...
         'K_IL10_CCL2', 'K_IL10_CXCL5 ', 'K_IK', 'K_CCL2_K', 'K_T', 'K_MT', 'n_IM', ...
         'n_DM', 'n_CCL2_M', 'n_IN', 'n_CXCL5_N', 'n_IK', 'n_CCL2_K', 'n_MT', 'd_H', 'd_I', ...
         'd_V', 'd_M', 'd_N', 'd_IL6', 'd_IL10', 'd_CCL2', 'd_CXCL5', 'd_K', 'd_T', ...
+        'b_H', 'b_M', 'b_N', 'b_K', ...
         'K_B_M', 'K_BMAL1_IL6', 'c_P_K', 'K_P_K', ...
         'K_REV_V', 'K_REV_IL6', 'K_REV_IL10', 'K_REV_CCL2', 'K_REV_CXCL5', ...
-        'c_ROR_IL6', 'K_ROR_IL6', 'c_IL6_REV', 'K_IL6_REV', 'n_IL6_REV', ...
-        'b_H', 'b_M', 'b_N', 'b_K');
-file = fopen('fitted_par_IAV_clock.txt', 'w');
-for i = 1:length(p)
-fprintf(file, '%s, %f\n', par_name(i, :), p(i));
-end
+        'c_ROR_IL6', 'K_ROR_IL6', 'c_IL6_REV', 'K_IL6_REV', 'n_IL6_REV');
 
-for i = 1:4
-    fprintf(file, '%s, %f\n', par_name(i + length(p), :), parBase(i));
+par_fitted = [par_IAV_fixed; p];
+
+file = fopen('fitted_par_IAV_clock.txt', 'w');
+
+for i = 1:length(par_fitted)
+    fprintf(file, '%s, %f\n', par_name(i, :), par_fitted(i));
 end
 
 fclose(file);

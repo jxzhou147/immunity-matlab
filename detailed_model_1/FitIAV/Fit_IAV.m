@@ -23,28 +23,25 @@ par_bound = importdata('par_IAV_clock_bound.txt');
 lb = par_bound.data(1:59, 1);
 ub = par_bound.data(1:59, 2);
 
-parFit0 = importdata('best_par_IAV_clock.txt');
+parFit0 = importdata('fit_ZT11.txt');
 parFit0 = parFit0.data(1:59);
 
 
 % optimize using simulannealbnd
-% hybridopts = optimoptions('fminunc', 'Display','iter','MaxIterations',10);
-% 
-% ini_tem = ones(1, length(parFit0)) * 100;
-% options = optimoptions('simulannealbnd','PlotFcns',...
-%           {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
-%           'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
+hybridopts = optimoptions('fminunc', 'Display','iter','MaxIterations',10);
+
+ini_tem = ones(1, length(parFit0)) * 500;
+options = optimoptions('simulannealbnd','PlotFcns',...
+          {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, ...
+          'InitialTemperature', ini_tem, 'TemperatureFcn', {@temperatureexp}, ...
+          'AnnealingFcn', {@newPar}, 'MaxIterations', 500);
 %           'HybridFcn', {@fmincon, hybridopts}, 'AnnealingFcn', {@newPar}, 'MaxIterations', 500);
-% par_est = simulannealbnd(FitFcn, parFit0, lb, ub, options);
+par_est = simulannealbnd(FitFcn, parFit0, lb, ub, options);
 
-
-% initial parameters from last fit
-% parFit0 = importdata('best_par_IAV_clock.txt');
-% parFit0 = parFit0.data;
 
 % optimize using fminsearch
 options_fmin = optimset('PlotFcns',@optimplotfval);
-[p, fminres] = fminsearch(FitFcn, parFit0, options_fmin);
+[p, fminres] = fminsearch(FitFcn, par_est, options_fmin);
 
 par_name = char('beta', 'gamma', 'eta', 'a_NH', 'a_MI', 'a_NI', 'a_KI', ...
         'a_TI', 'a_NV', 'c_IL6_M', 'c_IM', 'c_DM', 'c_CCL2_M', 'c_IN', 'c_CXCL5_N', ...

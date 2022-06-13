@@ -94,6 +94,7 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
     dydt(8) = -1 * dp_rev * (1 + c_IL6_REV * ...
         FracNoInf(RealRootPromise(IL6, n_IL6_REV), (RealRootPromise(K_IL6_REV, n_IL6_REV) + RealRootPromise(IL6, n_IL6_REV)))) * ...
         REV + kp_rev * Rev;
+%     dydt(8) = -1 * dp_rev * REV + kp_rev * Rev;
 
     dydt(9) = -1 * dp_ror * ROR + kp_ror * Ror;
 
@@ -106,11 +107,7 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
     
 
     % equations of clock-controlled IAV model
-    if (t <t_IAV)
-        for i = 13:25
-            dydt(i) = 0;
-        end
-    else
+    if (t >= t_IAV)
         dydt(13) = d_H * b_H - beta * H * V - d_H * H;
 
         dydt(14) = beta * H * V - FracNoInf(K_B_M, (K_B_M + BMAL1)) * (1 + c_IL6_M * FracNoInf(IL6, (K_IL6_M + IL6))) * a_MI * M * If - ...
@@ -137,7 +134,7 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
         dydt(20) = FracNoInf(K_REV_IL10, K_REV_IL10 + REV) * c_M_IL10 * M - d_IL10 * IL10;
 
         dydt(21) = FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * M + ...
-            c_I_CCL2 * If - d_CCL2 * CCL2;
+            FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * c_I_CCL2 * If - d_CCL2 * CCL2;
 
         dydt(22) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_M_CXCL5 * M + ...
             FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * c_I_CXCL5 * If - d_CXCL5 * CXCL5;

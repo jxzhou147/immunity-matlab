@@ -1,5 +1,5 @@
-beta, -8, -2
-gamma, -4, 2
+beta, -7, -6
+gamma, 1, 5
 eta, -5, 2
 a_NH, -4, 2
 a_MI, -4, 2
