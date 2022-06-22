@@ -1,4 +1,4 @@
-function dydt = ODE_IAV(t, y, par_IAV)
+function dydt = adjusted_ODE_IAV(t, y, par_IAV)
     
     dydt = zeros(14, 1);
     
@@ -15,6 +15,8 @@ function dydt = ODE_IAV(t, y, par_IAV)
         K_IL6_M, K_IL6_Mono, K_IL6_N, K_IL6_K, K_MI, K_IL10_IL6, K_IL10_CCL2, K_IL10_CXCL5, K_T, K_MT, n_MT, ...
         d_H, d_I, d_V, d_M, d_Mono, d_N, d_IL6, d_IL10, d_CCL2, d_CXCL5, d_K, d_T, ...
         Mono_tot, b_H, b_M, b_N, b_K] = deal(par_IAV{:});
+    
+    reduce_time = 0.1;
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % equations of clock-controlled IAV model
@@ -37,21 +39,26 @@ function dydt = ODE_IAV(t, y, par_IAV)
     
     dydt(7) = (c_N + c_CXCL5_N * (1 + c_IL6_N * FracNoInf(IL6, (K_IL6_N + IL6))) * CXCL5) * ((c_N + d_N) / c_N * b_N - N) - d_N * N;
 
+    c_M_IL6 = (1 - exp(-1 * reduce_time * t)) * c_M_IL6;
+    c_I_IL6 = (1 - exp(-1 * reduce_time * t)) * c_I_IL6;
     dydt(8) = FracNoInf(K_IL10_IL6, K_IL10_IL6 + IL10) * c_M_IL6 * (M + Mono) + ...
         c_K_IL6 * K + c_N_IL6 * N + c_I_IL6 * If - d_IL6 * IL6;
 
     dydt(9) = c_M_IL10 * (M + Mono) - d_IL10 * IL10;
 
-%     c_M_CCL2 = (1 - exp(-0.1 * t)) * c_M_CCL2;
+    c_M_CCL2 = (1 - exp(-1 * reduce_time * t)) * c_M_CCL2;
+    c_I_CCL2 = (1 - exp(-1 * reduce_time * t)) * c_I_CCL2;
     dydt(10) = FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * (M + Mono) + ...
         c_I_CCL2 * If - d_CCL2 * CCL2;
 
+    c_N_CXCL5 = (1 - exp(-1 * reduce_time * t)) * c_N_CXCL5;
+    c_I_CXCL5 = (1 - exp(-1 * reduce_time * t)) * c_I_CXCL5;
     dydt(11) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
         c_I_CXCL5 * If - d_CXCL5 * CXCL5;
     
     dydt(12) = (1 + c_IL6_K * FracNoInf(IL6, (K_IL6_K + IL6))) * (c_K + c_MK * (M + Mono) + c_IK * If) * ((c_K + d_K) / c_K * b_K - K) - d_K * K;
 
-%    dydt(13) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
+%     dydt(13) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
 %         FracNoInf(RealRootPromise((M + Mono), n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise((M + Mono), n_MT))) * T;
 % 
 %     dydt(14) = c_MT * FracNoInf(RealRootPromise((M + Mono), n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise((M + Mono), n_MT))) * T - d_T * T_E;

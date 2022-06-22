@@ -10,7 +10,7 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
 %     parFit(3) = -0.124729;
     
     % translate parFit to par in the odes
-    log_par_ind = [1:34 36:48];
+    log_par_ind = [1:40 42:54];
     par_IAV = [parFit; parBase];
     for i = log_par_ind
         par_IAV(i) = 10 .^ parFit(i);

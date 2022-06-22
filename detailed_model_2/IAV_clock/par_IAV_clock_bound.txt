@@ -56,3 +56,17 @@ b_H, 200, 400
 b_M, 10, 100
 b_N, 10, 100
 b_K, 10, 100
+K_B_M, 0, 1
+K_BMAL1_IL6, 0, 1
+c_P_K, -3, 1
+K_P_K, 0, 2
+K_REV_V, -3, -1
+K_REV_IL6, -3, -1
+K_REV_IL10, -3, -1
+K_REV_CCL2, -3, -1
+K_REV_CXCL5, -3, -1
+c_ROR_IL6, -3, 2
+K_ROR_IL6, -1, 1
+c_IL6_REV, -3, 1
+K_IL6_REV, -1, 5
+n_IL6_REV, 0, 3
