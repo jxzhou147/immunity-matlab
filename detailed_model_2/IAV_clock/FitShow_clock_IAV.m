@@ -19,7 +19,7 @@ parFit = importdata('best_par_IAV_clock.txt');
 parFit = parFit.data;
 
 % translate parFit to par in the odes
-log_par_ind = [1:40 42:54 59:72];
+log_par_ind = [1:43 47:60 65:77];
 par_IAV = parFit;
 for i = log_par_ind
     par_IAV(i) = 10 .^ parFit(i);
@@ -30,13 +30,13 @@ par_clock = load('par_clock.csv');
 % solve odes
 tmax = 400;
 tspan = 0:1:tmax;
-y0 = zeros(26, 1);
-y0(16) = 40;
-y0(13) = par_IAV(55);
-y0(17) = par_IAV(56);
-y0(19) = par_IAV(57);
-y0(24) = par_IAV(58);
-y0(25) = 10;
+y0 = zeros(27, 1);
+y0(16) = 1000;
+y0(13) = par_IAV(61);
+y0(17) = par_IAV(62);
+y0(20) = par_IAV(63);
+y0(25) = par_IAV(64);
+y0(26) = 10;
 
 
 % For ZT23
@@ -67,14 +67,16 @@ scatter(data_h(1, :) + t_IAV_23, data_h(2, :), 'b');   hold on;
 plot(tspan, y_23(:, 13), 'b', 'LineWidth', 2); hold on;
 scatter(data_h(1, :) + t_IAV_11 - 12, data_h(3, :), 'r');   hold on;
 plot(tspan - 12, y_11(:, 13), 'r', 'LineWidth', 2); hold on;
-xlabel('Time (h)'); ylabel('H (cells)');
+xlabel('Time (h)'); ylabel('H (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 plot(tspan, y_23(:, 14), 'b', 'LineWidth', 2); hold on;
 plot(tspan - 12, y_11(:, 14), 'r', 'LineWidth', 2); hold on;
-xlabel('Time (h)'); ylabel('I (cells)');
+xlabel('Time (h)'); ylabel('I (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
@@ -89,6 +91,7 @@ plot(tspan, Safe_log10(y_23(:, 16)), 'b', 'LineWidth', 2);  hold on;
 scatter(data_v(1, :) + t_IAV_11 - 12, Safe_log10(data_v(3, :)), 'r');   hold on;
 plot(tspan - 12, Safe_log10(y_11(:, 16)), 'r', 'LineWidth', 2);  hold on;
 xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on;
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
@@ -97,6 +100,7 @@ subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 plot(tspan, y_23(:, 15), 'b', 'LineWidth', 2);  hold on;
 plot(tspan - 12, y_11(:, 15), 'r', 'LineWidth', 2);  hold on;
 xlabel('Time (h)'); ylabel('D (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
@@ -107,19 +111,34 @@ set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*
 hold on;
 subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_m(1, :) + t_IAV_23, data_m(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 17), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 17) + y_23(:, 18), 'b', 'LineWidth', 2);  hold on;
 scatter(data_m(1, :) + t_IAV_11 - 12, data_m(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 17), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('M (cells)');
+plot(tspan - 12, y_11(:, 17) + y_11(:, 18), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('M0 (10^4/ml)');
+set(gca, 'XLim', [115 400]);
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+plot(tspan, y_23(:, 18), 'b', 'LineWidth', 2);  hold on;
+plot(tspan - 12, y_11(:, 18), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('M (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_mono(1, :) + t_IAV_23, data_mono(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 18), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 19), 'b', 'LineWidth', 2);  hold on;
 scatter(data_mono(1, :) + t_IAV_11 - 12, data_mono(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 18), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('Mono (cells)');
+plot(tspan - 12, y_11(:, 19), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('Mono (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
@@ -130,19 +149,21 @@ set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*
 hold on;
 subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_neu(1, :) + t_IAV_23, data_neu(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 19), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 20), 'b', 'LineWidth', 2);  hold on;
 scatter(data_neu(1, :) + t_IAV_11 - 12, data_neu(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 19), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('Neu (cells)');
+plot(tspan - 12, y_11(:, 20), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('Neu (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_nk(1, :) + t_IAV_23, data_nk(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 24), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 25), 'b', 'LineWidth', 2);  hold on;
 scatter(data_nk(1, :) + t_IAV_11 - 12, data_nk(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 24), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('NK (cells)');
+plot(tspan - 12, y_11(:, 25), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('NK (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
@@ -153,42 +174,21 @@ set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*
 hold on;
 subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_t(1, :) + t_IAV_23, data_t(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 25), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 26), 'b', 'LineWidth', 2);  hold on;
 scatter(data_t(1, :) + t_IAV_11 - 12, data_t(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 25), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('T (cells)');
+plot(tspan - 12, y_11(:, 26), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('T (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_te(1, :) + t_IAV_23, data_te(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 26), 'b', 'LineWidth', 2);  hold on;
+plot(tspan, y_23(:, 27), 'b', 'LineWidth', 2);  hold on;
 scatter(data_te(1, :) + t_IAV_11 - 12, data_te(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 26), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('TE (cells)');
-% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold off;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure;
-xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-hold on;
-subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_il6(1, :) + t_IAV_23, data_il6(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 20), 'b', 'LineWidth', 2);  hold on;
-scatter(data_il6(1, :) + t_IAV_11 - 12, data_il6(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 20), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('IL6 (pg/ml)'); hold on;
-% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
-hold on;
-
-subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
-scatter(data_ccl2(1, :) + t_IAV_23, data_ccl2(2, :), 'b');   hold on;
-plot(tspan, y_23(:, 22), 'b', 'LineWidth', 2);  hold on;
-scatter(data_ccl2(1, :) + t_IAV_11 - 12, data_ccl2(3, :), 'r');   hold on;
-plot(tspan - 12, y_11(:, 22), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('CCL2 (pg/ml)'); hold on;
+plot(tspan - 12, y_11(:, 27), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('TE (10^4/ml)');
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
@@ -200,107 +200,132 @@ hold on;
 subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 plot(tspan, y_23(:, 21), 'b', 'LineWidth', 2);  hold on;
 plot(tspan - 12, y_11(:, 21), 'r', 'LineWidth', 2);  hold on;
-xlabel('Time (h)'); ylabel('IL10 (pg/ml)'); hold on;
+xlabel('Time (h)'); ylabel('IL1b (pg/ml)'); hold on;
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+scatter(data_ccl2(1, :) + t_IAV_23, data_ccl2(2, :), 'b');   hold on;
 plot(tspan, y_23(:, 23), 'b', 'LineWidth', 2);  hold on;
+scatter(data_ccl2(1, :) + t_IAV_11 - 12, data_ccl2(3, :), 'r');   hold on;
 plot(tspan - 12, y_11(:, 23), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('CCL2 (pg/ml)'); hold on;
+set(gca, 'XLim', [115 400]);
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure;
+xSize = 20; X=xSize; ySize = 7;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
+plot(tspan, y_23(:, 22), 'b', 'LineWidth', 2);  hold on;
+plot(tspan - 12, y_11(:, 22), 'r', 'LineWidth', 2);  hold on;
+xlabel('Time (h)'); ylabel('IL10 (pg/ml)'); hold on;
+set(gca, 'XLim', [115 400]);
+% set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold on;
+
+subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
+plot(tspan, y_23(:, 24), 'b', 'LineWidth', 2);  hold on;
+plot(tspan - 12, y_11(:, 24), 'r', 'LineWidth', 2);  hold on;
 xlabel('Time (h)'); ylabel('CXCL5 (pg/ml)'); hold on;
+set(gca, 'XLim', [115 400]);
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % plot figures of clock mRNAs
-% figure;
-% xSize = 20; X=xSize; ySize = 60;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-% hold on;
-% 
-% subplot(3, 2, 1); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 1), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 1), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('Per mRNA');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 2); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 2), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 2), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('Cry mRNA');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 3); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 3), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 3), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('Rev mRNA');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445], 'YLim', [0 15]);
-% hold on;
-% 
-% subplot(3, 2, 4); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 4), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 4), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('Ror mRNA');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 5); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 5), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 5), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('Bmal1 mRNA');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445], 'YLim', [0 2.5]);
-% hold off;
-% 
-% % plot figures clock proteins
-% figure;
-% xSize = 20; X=xSize; ySize = 60;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
-% set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
-% hold on;
-% 
-% subplot(3, 2, 1); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 6), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 6), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('PER');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 2); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 7), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 7), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('CRY');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 3); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 8), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 8), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('REV');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold on;
-% 
-% subplot(3, 2, 4); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 9), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 9), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('ROR');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445], 'YLim', [0.4 0.55]);
-% hold on;
-% 
-% subplot(3, 2, 5); hold on; set(gca, 'FontSize', 26); box on;
-% plot(tspan, y_23(:, 10), 'k', 'LineWidth', 2); hold on;
-% plot(tspan, y_11(:, 10), 'r', 'LineWidth', 2); hold on;
-% xlabel('Circadian Time (h)'); ylabel('BMAL1');
-% % xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
-% % set(gca, 'XLim', [397 445]);
-% hold off;
+figure;
+xSize = 20; X=xSize; ySize = 60;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+
+subplot(3, 2, 1); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 1), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 1), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('Per mRNA');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 2); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 2), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 2), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('Cry mRNA');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 3); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 3), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 3), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('Rev mRNA');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445], 'YLim', [0 15]);
+hold on;
+
+subplot(3, 2, 4); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 4), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 4), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('Ror mRNA');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 5); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 5), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 5), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('Bmal1 mRNA');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445], 'YLim', [0 2.5]);
+hold off;
+
+% plot figures clock proteins
+figure;
+xSize = 20; X=xSize; ySize = 60;xLeft = (xSize-xSize)/2; Y=ySize; yTop = (ySize-ySize)/2;
+set(gcf,'PaperPosition',[xLeft yTop xSize ySize]);set(gcf,'Position',[X Y xSize*50 ySize*55]);
+hold on;
+
+subplot(3, 2, 1); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 6), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 6), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('PER');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 2); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 7), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 7), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('CRY');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 3); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 8), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 8), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('REV');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold on;
+
+subplot(3, 2, 4); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 9), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 9), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('ROR');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445], 'YLim', [0.4 0.55]);
+hold on;
+
+subplot(3, 2, 5); hold on; set(gca, 'FontSize', 26); box on;
+plot(tspan, y_23(:, 10), 'b', 'LineWidth', 2); hold on;
+plot(tspan, y_11(:, 10), 'r', 'LineWidth', 2); hold on;
+xlabel('Circadian Time (h)'); ylabel('BMAL1');
+% xticks([403 415 427 439]); xticklabels({'0', '12', '0', '12'});
+% set(gca, 'XLim', [397 445]);
+hold off;

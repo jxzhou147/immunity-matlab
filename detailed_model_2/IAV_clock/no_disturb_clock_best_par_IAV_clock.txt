@@ -1,5 +1,5 @@
-beta         , -6.3
-gamma        , 4.5
+beta         , -6.5
+gamma        , 3.5
 eta          , -0.076304
 a_NH         , -5
 a_MH         , -5
@@ -10,7 +10,7 @@ a_TI         , -1
 a_MD         , -2.5
 a_NV         , -3.993914
 c_IL1b_M     , 1.5
-c_IL1b_Mono  , 0.1
+c_IL1b_Mono  , 1.5
 c_IL1b_N     , 1.5
 c_IL1b_K     , -1
 c_IM         , -1
@@ -21,8 +21,8 @@ c_M_IL1b     , 2.5
 c_I_IL1b     , 2.5
 c_D_IL1b     , 1
 c_M_IL10     , 0.401379
-c_M_CCL2     , 0.5
-c_I_CCL2     , 0.5
+c_M_CCL2     , 1
+c_I_CCL2     , 1
 c_N_CXCL5    , 0.5
 c_I_CXCL5    , -0.1
 c_K          , -3.834734
@@ -66,13 +66,13 @@ K_B_M        , 10
 K_BMAL1_IL1b  , 10
 c_P_K        , -10
 K_P_K        , 10
-K_REV_V      , -3.5
+K_REV_V      , 10
 K_REV_IL1b    , -4
 K_REV_IL10   , 10
 K_REV_CCL2   , -4
 K_REV_CXCL5  , -4
 c_ROR_IL1b    , -10
 K_ROR_IL1b    , 10
-c_IL1b_REV    , 1
-K_IL1b_REV    , 2
+c_IL1b_REV    , -10
+K_IL1b_REV    , 10
 n_IL1b_REV    , 2
