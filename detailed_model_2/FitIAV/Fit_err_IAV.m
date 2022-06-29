@@ -1,4 +1,4 @@
-function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v, data_t, data_te, data_il6, data_ccl2, parFit, parBase)
+function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v, data_t, data_te, data_il1b, data_ccl2, parFit, parBase)
     
     % meaning of inputs
     % data*(1): time; data*(2): value of ZT23; data*(3): value of ZT11
@@ -10,7 +10,7 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
 %     parFit(3) = -0.124729;
     
     % translate parFit to par in the odes
-    log_par_ind = [1:40 42:54];
+    log_par_ind = [1:43 47:60];
     par_IAV = [parFit; parBase];
     for i = log_par_ind
         par_IAV(i) = 10 .^ parFit(i);
@@ -19,13 +19,13 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
     % solve odes
     tmax = 250;
     tspan = 0:1:tmax;
-    y0 = zeros(14, 1);
+    y0 = zeros(15, 1);
     y0(4) = 40;
     y0(1) = parBase(1);
     y0(5) = parBase(2);
-    y0(7) = parBase(3);
-    y0(12) = parBase(4);
-    y0(13) = 10;
+    y0(8) = parBase(3);
+    y0(13) = parBase(4);
+    y0(14) = 10;
     
     
     % For ZT23
@@ -72,13 +72,13 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
         ind_11 = t == data_m(1, i);
         err = err + ((y_11(ind_11, 1) - data_h(data_ind, i)) ...
             / max(data_h(data_ind, :))) .^ 2;
-        err = err + ((y_11(ind_11, 5) - data_m(data_ind, i)) ...
+        err = err + ((y_11(ind_11, 5) + y_11(ind_11, 6) - data_m(data_ind, i)) ...
             / max(data_m(data_ind, :))) .^ 2;
-        err = err + ((y_11(ind_11, 6) - data_mono(data_ind, i)) ...
+        err = err + ((y_11(ind_11, 7) - data_mono(data_ind, i)) ...
             / max(data_mono(data_ind, :))) .^ 2;
-        err = err + ((y_11(ind_11, 7) - data_neu(data_ind, i)) ...
+        err = err + ((y_11(ind_11, 8) - data_neu(data_ind, i)) ...
             / max(data_neu(data_ind, :))) .^ 2;
-        err = err + ((y_11(ind_11, 12) - data_nk(data_ind, i)) ...
+        err = err + ((y_11(ind_11, 13) - data_nk(data_ind, i)) ...
             / max(data_nk(data_ind, :))) .^ 2;
     end
     
@@ -95,24 +95,24 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
         ind_11 = t == data_t(1, i);
 %         err = err + ((y_23(ind_23, 12) - data_t(2, i)) ...
 %             / max(data_t(2, :))) .^ 2;
-        err = err + ((y_11(ind_11, 14) - data_te(data_ind, i)) ...
+        err = err + ((y_11(ind_11, 15) - data_te(data_ind, i)) ...
             / max(data_te(data_ind, :))) .^ 2;
     end
     
     % cost function of IL6 and CCL2 - non log error
     for i = 1:4
 %         % err of ZT23
-%         ind_23 = t == data_il6(1, i);
-%         err = err + ((y_23(ind_23, 7) - data_il6(2, i)) ...
-%             / max(data_il6(2, :))) .^ 2;
+%         ind_23 = t == data_il1b(1, i);
+%         err = err + ((y_23(ind_23, 7) - data_il1b(2, i)) ...
+%             / max(data_il1b(2, :))) .^ 2;
 %         err = err + ((y_23(ind_23, 9) - data_ccl2(2, i)) ...
 %             / max(data_ccl2(2, :))) .^ 2;
         
         % err of ZT11
-        ind_11 = t == data_il6(1, i);
-        err = err + ((y_11(ind_11, 8) - data_il6(data_ind, i)) ...
-            / max(data_il6(data_ind, :))) .^ 2;
-        err = err + ((y_11(ind_11, 10) - data_ccl2(data_ind, i)) ...
+        ind_11 = t == data_ccl2(1, i);
+%         err = err + ((y_11(ind_11, 9) - data_il1b(data_ind, i)) ...
+%             / max(data_il1b(data_ind, :))) .^ 2;
+        err = err + ((y_11(ind_11, 11) - data_ccl2(data_ind, i)) ...
             / max(data_ccl2(data_ind, :))) .^ 2;
     end
 
