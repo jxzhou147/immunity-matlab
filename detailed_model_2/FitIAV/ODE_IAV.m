@@ -1,10 +1,12 @@
-function dydt = ODE_IAV(t, y, par_IAV)
+function dydt = ODE_IAV(t, y, par_IAV, par_var, par_id, par_infla)
     
-    dydt = zeros(15, 1);
+    par_IAV(par_id) = par_var;
+    
+    dydt = zeros(16, 1);    % y(16):weight change
     
     % variables of IAV model
     y_cell = num2cell(y);
-    [H, If, D, V, M_0, M, Mono, N, IL1b, IL10, CCL2, CXCL5, K, T, T_E] = deal(y_cell{:});
+    [H, If, D, V, M_0, M, Mono, N, IL1b, IL10, CCL2, CXCL5, K, T, T_E, wc] = deal(y_cell{:});
     
     % parameters of IAV model
     par_IAV = num2cell(par_IAV);
@@ -16,15 +18,24 @@ function dydt = ODE_IAV(t, y, par_IAV)
         d_H, d_I, d_V, d_M0, d_M, d_Mono, d_N, d_IL1b, d_IL10, d_CCL2, d_CXCL5, d_K, d_T, ...
         Mono_tot, b_H, b_M0, b_N, b_K] = deal(par_IAV{:});
     
+    % parameters of inflammation and weigth change
+    par_infla = num2cell(par_infla);
+    [sigma_M, sigma_Mono, sigma_N, sigma_I, sigma_Infla, K_I, K_In, n_I, n_In, d_wc] = deal(par_infla{:});
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % equations of clock-controlled IAV model
     dydt(1) = (a_NH * b_N + a_MH * b_M0 + d_H) * b_H - beta * H * V - ...
         a_NH * N * H - a_MH * (M + Mono) * H - d_H * H;
 %     dydt(1) = d_H * b_H - beta * H * V - a_NH * (N - b_N) * H - d_H * H;
 %     dydt(1) = - beta * H * V;
+%     dydt(1) = 0.01 * H * (1 - H / b_H ) - beta * H * V;
 
+%     dydt(2) = beta * H * V - a_MI * FracNoInf((M + Mono), (K_MI + M + Mono)) * If - ...
+%         a_NI * N * If - a_KI * K * If - a_TI * T_E * If - d_I * If;
+%     dydt(2) = beta * H * V - a_MI * FracNoInf((M + Mono), (K_MI + M + Mono)) * If - ...
+%         a_NI * N * If - a_KI * (1 - FracNoInf(RealRootPromise(M + Mono, 5), 50 ^ 5 + RealRootPromise(M + Mono, 5))) * K  * If - a_TI * (1 - FracNoInf(RealRootPromise(M + Mono, 5), 50 ^ 5 + RealRootPromise(M + Mono, 5))) * T_E * If * 200 / (200 + If) - d_I * If;
     dydt(2) = beta * H * V - a_MI * FracNoInf((M + Mono), (K_MI + M + Mono)) * If - ...
-        a_NI * N * If - a_KI * K * If - a_TI * T_E * If - d_I * If;
+        a_NI * N * If - a_KI * FracNoInf(70 ^ 5, 70 ^ 5 + RealRootPromise(M + Mono, 5)) * K  * If - a_TI * FracNoInf(70 ^ 5, 70 ^ 5 + RealRootPromise(M + Mono, 5)) * T_E * If * 200 / (200 + If) - d_I * If;
    
     dydt(3) = a_NI * N * If + a_KI * K * If + a_TI * T_E * If + d_I * If + ...
         a_NH * N * H + a_MH * (M + Mono) * H - a_MD * (M + Mono) * D;
@@ -56,7 +67,8 @@ function dydt = ODE_IAV(t, y, par_IAV)
     dydt(12) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
         c_I_CXCL5 * If - d_CXCL5 * CXCL5;
     
-    dydt(13) = (1 + c_IL1b_K * FracNoInf(IL1b, (K_IL1b_K + IL1b))) * (c_K + c_MK * M + c_IK * If) * ((c_K + d_K) / c_K * b_K - K) - d_K * K;
+%     dydt(13) = (1 + c_IL1b_K * FracNoInf(IL1b, (K_IL1b_K + IL1b))) * (c_K + c_MK * M + c_IK * If) * ((c_K + d_K) / c_K * b_K - K) - d_K * K;
+    dydt(13) = (1 + c_IL1b_K * FracNoInf(IL1b, (K_IL1b_K + IL1b))) * (c_K + c_MK * M + c_IK * 20 * FracNoInf(If, 10 + If)) * ((c_K + d_K) / c_K * b_K - K) - d_K * K;
 
 %    dydt(13) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
 %         FracNoInf(RealRootPromise((M + Mono), n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise((M + Mono), n_MT))) * T;
@@ -66,5 +78,12 @@ function dydt = ODE_IAV(t, y, par_IAV)
         FracNoInf(RealRootPromise(K, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(K, n_MT))) * T;
 
     dydt(15) = c_MT * FracNoInf(RealRootPromise(K, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(K, n_MT))) * T - d_T * T_E;
+    
+    %%%%%%%%%%%%%%%% dynamics of inflammation and weigth change
+%     infla = sigma_M * M + sigma_Mono * Mono + sigma_N * N;
+    infla = sigma_Mono * Mono + sigma_N * (N - b_N);
+    dydt(16) = sigma_I * FracNoInf(RealRootPromise(If, n_I), RealRootPromise(K_I, n_I) + RealRootPromise(If, n_I)) + ...
+            sigma_Infla * FracNoInf(RealRootPromise(infla, n_In), RealRootPromise(K_In, n_In) + RealRootPromise(infla, n_In)) - d_wc * wc;
+    
 
 end

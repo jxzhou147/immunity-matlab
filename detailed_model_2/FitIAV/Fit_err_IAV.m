@@ -38,7 +38,7 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
 
     err = 0;
     
-    data_ind = 3;   % 2: ZT23, 3: ZT11
+    data_ind = 2;   % 2: ZT23, 3: ZT11
     
     % cost function of V - log error
     for i = 1:8
@@ -70,8 +70,8 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
     for i = 1:3
         % err of ZT11
         ind_11 = t == data_m(1, i);
-        err = err + ((y_11(ind_11, 1) - data_h(data_ind, i)) ...
-            / max(data_h(data_ind, :))) .^ 2;
+%         err = err + ((y_11(ind_11, 1) - data_h(data_ind, i)) ...
+%             / max(data_h(data_ind, :))) .^ 2;
         err = err + ((y_11(ind_11, 5) + y_11(ind_11, 6) - data_m(data_ind, i)) ...
             / max(data_m(data_ind, :))) .^ 2;
         err = err + ((y_11(ind_11, 7) - data_mono(data_ind, i)) ...
