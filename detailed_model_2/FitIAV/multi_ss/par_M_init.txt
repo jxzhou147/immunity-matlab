@@ -1,0 +1,8 @@
+c_CCL2_Mono, 1
+K_CCL2_Mono, 2
+n_CCL2_Mono, 0.5
+d_Mono, -2
+c_M_CCL2, -2
+c_I_CCL2, -2
+d_CCL2, -2
+I, 0
