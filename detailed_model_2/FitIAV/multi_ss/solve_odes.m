@@ -1,4 +1,4 @@
-function y = solve_odes(par_base, par_consider_idx, par_consider, y0)
+function y = solve_odes(par_base, par_consider_idx, par_consider, y0, tspan)
     
     % replace parameters considered with par_consider
     tmp = 1;
@@ -8,11 +8,8 @@ function y = solve_odes(par_base, par_consider_idx, par_consider, y0)
     end
     
     % solve odes
-    tmax = 10000;
-    tspan = 0:1:tmax;
-    [t, y] = ode15s(@ODE_M, tspan, y0, [], par_base);
+    y0(3) = par_consider(1);
+    [t, y] = ode15s(@ODE_IAV, tspan, y0, [], par_base);
     y = real(y);
-    
-    y = y(end, :);
-    
+   
 end
