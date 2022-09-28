@@ -4,11 +4,11 @@ function dydt = ODE_IAV(t, y, par_IAV)
     
     % variables of IAV model
     y_cell = num2cell(y);
-    [H, If, ~, M_0, M, Mono, N, IL1b, IL10, CCL2, CXCL5, K, T, T_E] = deal(y_cell{:});
+    [H, If, V, M_0, M, Mono, N, IL1b, IL10, CCL2, CXCL5, K, T, T_E] = deal(y_cell{:});
     
     % parameters of IAV model
     par_IAV = num2cell(par_IAV);
-    [V, zeta, beta, gamma, eta, ...
+    [zeta, beta, gamma, eta, ...
         a_MI, a_NI, a_KI, a_TI, a_NV, ...
         c_IL1b_M, c_IL1b_Mono, c_IL1b_N, c_IM, c_CCL2_Mono, c_N, c_CXCL5_N, c_M_IL1b, c_I_IL1b, ...
         c_M_IL10, c_M_CCL2, c_I_CCL2, c_N_CXCL5, c_I_CXCL5, c_K, c_MK, c_IK, c_MT, ...
@@ -46,10 +46,10 @@ function dydt = ODE_IAV(t, y, par_IAV)
 %     if (y(3) <1e-3)
 %         dydt(3) = 0;
 %     else
-%         dydt(3) = gamma * If - a_NV * N * V - d_V * V;
+    dydt(3) = gamma * If - a_NV * N * V - d_V * V;
 %     end
-    y(3) = V;
-    dydt(3) = 0;
+%     y(3) = V;
+%     dydt(3) = 0;
 
     dydt(4) = b_M0 * d_M0 - (1 + c_IL1b_M * FracNoInf(IL1b, K_IL1b_M +IL1b)) * ...
         c_IM * FracNoInf(RealRootPromise(If, n_I_M), RealRootPromise(K_I_M, n_I_M) + RealRootPromise(If, n_I_M)) * M_0 - ...

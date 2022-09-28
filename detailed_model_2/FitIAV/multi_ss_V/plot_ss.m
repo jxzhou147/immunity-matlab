@@ -36,7 +36,7 @@ xlabel('c_I_CXCL5'); ylabel('Virus (log_{10} pfu)'); hold on;
 hold on;
 
 subplot(1,2,2); hold on; set(gca,'Fontsize',26); box on;
-plot(V, ss(:, 7) + ss(:, 8), 'r', V, ss(:, 9) + ss(:, 8), 'b', 'LineWidth', 2); hold on;
+plot(V, ss(:, 7) + ss(:, 8), 'r', V, ss(:, 9) + ss(:, 10), 'b', 'LineWidth', 2); hold on;
     xlabel('c_I_CXCL5'); ylabel('M0 (10^4/ml)');
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold off;

@@ -9,9 +9,6 @@ N = 1000;
 lhs_rad = lhsdesign(N, length(init_bound));
 init_lhs = lhs_rad .* init_bound(:, 1)' + lhs_rad .* (init_bound(:, 2)' - init_bound(:, 1)');
 
-init_V = zeros(N, 1);
-init_lhs = [init_lhs(:, 1:2) init_V init_lhs(:, 3:end)];
-
 % write lhs parameters to file
 file_init = fopen('lhs_init.txt', 'w');
 for i = 1:N

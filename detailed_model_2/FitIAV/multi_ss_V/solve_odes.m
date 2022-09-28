@@ -8,7 +8,6 @@ function y = solve_odes(par_base, par_consider_idx, par_consider, y0, tspan)
     end
     
     % solve odes
-    y0(3) = par_consider(1);
     [t, y] = ode15s(@ODE_IAV, tspan, y0, [], par_base);
     y = real(y);
    

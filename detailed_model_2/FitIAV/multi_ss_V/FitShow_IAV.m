@@ -11,30 +11,42 @@ data_t = xlsread('data_to_fit.xlsx', 3, 'B25:G27');
 data_te = xlsread('data_to_fit.xlsx', 3, 'B29:G31');
 data_il1b = xlsread('data_to_fit.xlsx', 3, 'B33:E35');
 data_ccl2 = xlsread('data_to_fit.xlsx', 3, 'B37:E39');
-
+    
 data_v(2:3, :) = 10 .^ data_v(2:3, :);
 
 % load fitted parameter set ZT11
-par_base = importdata('multi_ss_par_256.txt');
-par_base = par_base(1, :);
-par_consider_idx = (1:58);
+% par_base = importdata('multi_ss_par_488.txt');
+% par_base = par_base(97, :);
+par_base = importdata('par_base.txt');
+par_base = par_base.data;
+par_consider_idx = (1:57);
 
 % translate parFit to par in the odes
-% log_par_ind = [1:39 43:54];
-% for i = log_par_ind
-%     par_base(i) = 10 .^ par_base(i);
-% end
+log_par_ind = [1:39 43:54];
+for i = log_par_ind
+    par_base(i) = 10 .^ par_base(i);
+end
 
 % load initial values
-y0s = importdata('lhs_init.txt');
-y0s = y0s(1:1000, :);
-[m, n] = size(y0s);
+% y0s = importdata('lhs_init.txt');
+% y0s = y0s(1:1000, :);
+% [m, n] = size(y0s);
+m = 4;
+n = 14;
 
-tspan = 0:1:10000;
+y0_base = importdata('init_base.txt');
+y0_base = y0_base.data;
+y0s = zeros(m, n);
+for i = 1:m
+    y0s(i, :) = y0_base;
+    y0s(i, 3) = 10 ^ (i - 1);
+end
+
+tspan = 0:1:1000;
 
 y = zeros(length(tspan), n, m);
 
-p = parpool(20);
+p = parpool(4);
 tic;
 parfor i = 1:m
     y_i = solve_odes(par_base, par_consider_idx, par_base, y0s(i, :), tspan);
@@ -48,19 +60,6 @@ toc;
 disp(['run time:', num2str(toc)]);
 delete(p);
 
-% solve odes
-% tmax = 50000;
-% tspan = 0:1:tmax;
-% y0 = zeros(14, 1);
-% y0(3) = 0;
-% y0(1) = par_base(55);
-% y0(4) = par_base(56);
-% y0(7) = par_base(57);
-% y0(12) = par_base(58);
-% y0(13) = 10;
-% 
-% [t, y] = ode15s(@ODE_IAV, tspan, y0, [], par_base);
-% y = real(y);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % plot figures
@@ -95,9 +94,10 @@ subplot(1,2,1); hold on; set(gca,'Fontsize',26); box on;
 scatter(data_v(1, :), Safe_log10(data_v(2, :)), 'b');   hold on;
 scatter(data_v(1, :), Safe_log10(data_v(3, :)), 'r');   hold on;
 for i = 1:m
-    plot(tspan, Safe_log10(y(:, 3, i)), 'r', 'LineWidth', 2);  hold on;
+%     plot(tspan, Safe_log10(y(:, 3, i)), 'r', 'LineWidth', 2);  hold on;
+    plot(tspan,y(:, 3, i), 'r', 'LineWidth', 2);  hold on;
 end
-    xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on;
+xlabel('Time (h)'); ylabel('Virus pfu)'); hold on;
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 
