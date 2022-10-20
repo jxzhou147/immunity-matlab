@@ -1,11 +1,18 @@
 % plot bifurcation diagram
 clear;clc
 % fix 1 parameter set and let V be the consider par
-par_base = importdata('confirmed_ss.txt');
-par_base = par_base(2, :);
+par_base = importdata('tight_parset\par_base.txt');
+% par_base = par_base(2, :);
+par_base = par_base.data;
 
-par_set_num = 100;
-par_consider_idx = 1;
+% translate parFit to par in the odes
+log_par_ind = [1:38 42:53];
+for i = log_par_ind
+    par_base(i) = 10 .^ par_base(i);
+end
+
+par_set_num = 20;
+par_consider_idx = 20;
 par_consider = zeros(par_set_num, 1);
 multi_ss_bool = false(par_set_num, 1);
 multi_ss = zeros(2, 14, par_set_num);
@@ -13,7 +20,7 @@ multi_ss = zeros(2, 14, par_set_num);
 p = parpool(20);
 tic;
 for i = 1:par_set_num
-    par_consider(i) = 10000 * (i - 1);
+    par_consider(i) = (i - 1) * 5e-2;
     [multi_ss_bool(i), multi_ss(:, :, i)] = if_multi_ss(par_base, par_consider_idx, par_consider(i));
 end
 delete(p);

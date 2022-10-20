@@ -1,0 +1,8 @@
+# Mono-CCL2 model
+param ccm=1500,kcm=400,ncm=3,dm=5,cmc=3.5,cic=1.5,dc=1.5,i=100
+
+mono' = ccm * ccl2 ^ ncm / (kcm ^ ncm + ccl2 ^ ncm) - dm * mono
+ccl2' = cmc * mono + cic * i - dc * ccl2
+
+init mono=0,ccl2=0
+done

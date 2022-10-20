@@ -1,0 +1,26 @@
+# IAV model IAV.ode
+param zeta=0.01,beta=0.0000003162,gamma=1449.4358538346,eta=0.9407625053,a_MI=0.001,a_NI=0.001,a_KI=0.0031622777,a_TI=0.01,a_NV=0.00001
+param c_IL1b_M=1,c_IL1b_Mn=1,c_IL1b_N=1,c_IM=1,c_CCL2_Mn=10,c_N=0.0031622777,c_CXCL5_N=0.0000220636,c_M_IL1b=0.1,c_I_IL1b=0.1,c_M_IL10=0.1
+param c_M_CCL2=0.1,c_I_CCL2=0.1,c_N_CXCL5=0.1,c_I_CXCL5=0.1,c_K=0.0001,c_MK=0.0000075661,c_IK=0.0001,c_MT=2.9600496793,K_IL1b_M=1000
+param K_IL1b_Mn=1000,K_IL1b_N=1000,K_MI=28.0935097868,K_I_M=100,K_CCL2_Mn=100,K_IL10_IL1=605.0273399825,K_IL10_CCL=111.4191907999,K_IL10_CX=72.2768139365,K_T=100,K_MT=982.6344818667
+param n_I_M=2,n_CCL2_Mn=3,n_MT=3.5286130000,d_I=0.01,d_V=0.0316227766,d_M0=0.01,d_M=0.0261519453,d_Mn=0.0398107171,d_N=0.0199526231
+param d_IL1b=0.05,d_IL10=0.05,d_CCL2=0.01,d_CXCL5=0.01,d_K=0.01,d_T=0.01,b_H=350,b_M0=80,b_N=15,b_K=40
+
+H' = zeta * H * (1 - H / b_H ) - beta * H * V
+I' = beta * H * V - a_MI * (M + Mn) / (K_MI + M + Mn) * I - a_NI * N * I - a_KI * K * I - a_TI * T_E * I - d_I * I
+V' = gamma * I - a_NV * N * V - d_V * V - 8e-2 * V / (1e-2 + V)
+M_0' = b_M0 * d_M0 - (1 + c_IL1b_M * IL1b / (K_IL1b_M +IL1b)) * c_IM * I ^ n_I_M / (K_I_M ^ n_I_M + I ^ n_I_M) * M_0 - d_M0 * M_0
+M' = (1 + c_IL1b_M * IL1b / (K_IL1b_M +IL1b)) *c_IM * I ^ n_I_M / (K_I_M ^ n_I_M + I ^ n_I_M) * M_0 - d_M * M
+Mn' = c_CCL2_Mn * (1 + c_IL1b_Mn * IL1b / (K_IL1b_Mn + IL1b)) * CCL2 ^ n_CCL2_Mn / (K_CCL2_Mn ^ n_CCL2_Mn + CCL2 ^ n_CCL2_Mn) - d_Mn * Mn
+N' = (c_N + c_CXCL5_N * (1 + c_IL1b_N * IL1b / (K_IL1b_N + IL1b)) * CXCL5) * ((c_N + d_N) / c_N * b_N - N) - d_N * N
+IL1b' = (K_IL10_IL1 / (K_IL10_IL1 + IL10) * c_M_IL1b * (M + Mn) + c_I_IL1b * I) - d_IL1b * IL1b
+IL10' = c_M_IL10 * (M + Mn) - d_IL10 * IL10
+CCL2' = K_IL10_CCL / (K_IL10_CCL + IL10) * c_M_CCL2 * (M + Mn) + c_I_CCL2 * I - d_CCL2 * CCL2
+CXCL5' = K_IL10_CX / (K_IL10_CX + IL10) * c_N_CXCL5 * (N - b_N) + c_I_CXCL5 * I - d_CXCL5 * CXCL5
+K' = (c_K + c_MK * M + c_IK * I) * ((c_K + d_K) / c_K * b_K - K) - d_K * K
+T0' = eta * T0 * (1 - T0 / K_T) - c_MT * Mn ^ n_MT / (K_MT ^ n_MT + Mn ^ n_MT) * T0
+T_E' = c_MT * Mn ^ n_MT / (K_MT ^ n_MT + Mn ^ n_MT) * T0 - d_T * T_E
+
+init H=350,I=0,V=100,M_0=80,M=0,Mn=0,N=15,IL1b=0,IL10=0,CCL2=0,CXCL5=0,K=40,T0=10,T_E=0
+@ total=2000,bound=10000000
+done

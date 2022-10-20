@@ -8,16 +8,16 @@ for i = log_par_ind
 end
 
 % load hls parameters
-par_consider_idx = (1:57);
-par_consider = dlmread('lhs_par.txt', '', [par_num-1 0 par_num-1 57]);
+par_consider_idx = 20;
+par_consider = par_offset * 0.01;
 
 tic;
 
 [multi_ss_bool, multi_ss] = if_multi_ss(par_base, par_consider_idx, par_consider);
 
-file_name = strcat('multi_ss_', int2str(par_num), '.txt');
+file_name = strcat('multi_ss_', int2str(par_offset), '.txt');
 file_multi_ss = fopen(file_name, 'w');
-fprintf(file_multi_ss, '%d ', par_num);
+fprintf(file_multi_ss, '%d ', par_consider);
 fprintf(file_multi_ss, '%f ', multi_ss_bool);
 fprintf(file_multi_ss, '%f ', reshape(multi_ss, 1, []));
 fprintf(file_multi_ss, '\n');

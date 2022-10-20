@@ -1,4 +1,10 @@
 function dydt = ODE_IAV(t, y, par_IAV)
+
+%     for i = 1:length(y)
+%         if y(i) < 1
+%             y(i) = 0;
+%         end
+%     end
     
     dydt = zeros(14, 1);    % y(16):weight change
     
@@ -30,6 +36,7 @@ function dydt = ODE_IAV(t, y, par_IAV)
 %         y(1) = 0;
 %         dydt(1) = 0;
 %     else
+    
     dydt(1) = zeta * H * (1 - H / b_H ) - beta * H * V;
 %     end
     
@@ -46,19 +53,27 @@ function dydt = ODE_IAV(t, y, par_IAV)
 %     if (y(3) <1e-3)
 %         dydt(3) = 0;
 %     else
-    dydt(3) = gamma * If - a_NV * N * V - d_V * V;
+%     if V < 1
+%         V = 0;
+%     else
+%     dydt(3) = gamma * If - a_NV * N * V - d_V * V;
+%     end
 %     end
 %     y(3) = V;
 %     dydt(3) = 0;
+    
+    % the last term is used to avoid regeneration of virus which is tiny enough
+%     dydt(3) = gamma * If - a_NV * N * V - d_V * V - 8e-2 * V / (1e-4 + V);
+    dydt(3) = gamma * If - a_NV * N * V - d_V * V - 8e-2 * V / (1e-2 + V);
 
     dydt(4) = b_M0 * d_M0 - (1 + c_IL1b_M * FracNoInf(IL1b, K_IL1b_M +IL1b)) * ...
         c_IM * FracNoInf(RealRootPromise(If, n_I_M), RealRootPromise(K_I_M, n_I_M) + RealRootPromise(If, n_I_M)) * M_0 - ...
         d_M0 * M_0;
-    
+
     dydt(5) = (1 + c_IL1b_M * FracNoInf(IL1b, K_IL1b_M +IL1b)) * ...
         c_IM * FracNoInf(RealRootPromise(If, n_I_M), RealRootPromise(K_I_M, n_I_M) + RealRootPromise(If, n_I_M)) * M_0 - ...
         d_M * M;
-    
+
 %     dydt(7) = c_CCL2_Mono * (1 + c_IL1b_Mono * FracNoInf(IL1b, (K_IL1b_Mono + IL1b))) * CCL2 * (Mono_tot - Mono) - d_Mono * Mono;
 %     dydt(7) = c_CCL2_Mono * (1 + c_IL1b_Mono * FracNoInf(IL1b, (K_IL1b_Mono + IL1b))) * 1000 * FracNoInf(CCL2, CCL2 + 500) * (Mono_tot - Mono) - d_Mono * Mono;
     dydt(6) = c_CCL2_Mono * (1 + c_IL1b_Mono * FracNoInf(IL1b, (K_IL1b_Mono + IL1b))) * ...
@@ -76,7 +91,9 @@ function dydt = ODE_IAV(t, y, par_IAV)
     dydt(10) = FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * (M + Mono) + ...
         c_I_CCL2 * If - d_CCL2 * CCL2;
 
-    dydt(11) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
+%     dydt(11) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
+%         c_I_CXCL5 * If - d_CXCL5 * CXCL5;
+    dydt(11) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * (N - b_N) + ...
         c_I_CXCL5 * If - d_CXCL5 * CXCL5;
     
     dydt(12) = (c_K + c_MK * M + c_IK * If) * ((c_K + d_K) / c_K * b_K - K) - d_K * K;
@@ -87,9 +104,9 @@ function dydt = ODE_IAV(t, y, par_IAV)
 % 
 %     dydt(14) = c_MT * FracNoInf(RealRootPromise((M + Mono), n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise((M + Mono), n_MT))) * T - d_T * T_E;
     dydt(13) = eta * T * (1 - FracNoInf(T, K_T)) - c_MT * ...
-        FracNoInf(RealRootPromise(K, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(K, n_MT))) * T;
+        FracNoInf(RealRootPromise(Mono, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(Mono, n_MT))) * T;
 
-    dydt(14) = c_MT * FracNoInf(RealRootPromise(K, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(K, n_MT))) * T - d_T * T_E;
+    dydt(14) = c_MT * FracNoInf(RealRootPromise(Mono, n_MT), (RealRootPromise(K_MT, n_MT) + RealRootPromise(Mono, n_MT))) * T - d_T * T_E;
     
     %%%%%%%%%%%%%%%% dynamics of inflammation and weigth change
 %     infla = sigma_M * M + sigma_Mono * Mono + sigma_N * N;

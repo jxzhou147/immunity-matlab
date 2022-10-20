@@ -2,21 +2,23 @@
 par_base = importdata('par_base.txt');
 par_base = par_base.data;
 % translate to par in the odes
-log_par_ind = [1:39 43:54];
+log_par_ind = [1:38 42:53];
 for i = log_par_ind
     par_base(i) = 10 .^ par_base(i);
 end
 
 % load hls parameters
-par_set_num = 25;
-par_consider_idx = (1:57);
-par_consider = dlmread('lhs_par.txt', '', [par_offset 0 par_offset+par_set_num-1 56]);
+par_set_num = 2;
+% par_consider_idx = (1:57);
+par_consider_idx = [14, 20, 21, 33, 40, 46, 50];
+% par_consider = readmatrix('lhs_par.txt', 'Range', 'par_offset:par_offset+par_set_num');
+par_consider = dlmread('tight_parset\lhs_par.txt', '', [par_offset 0 par_offset+par_set_num-1 6]);
 
 multi_ss_bool = false(par_set_num, 1);
 multi_ss = zeros(2, 14, par_set_num);
 
 tic;
-file_name = strcat('multi_ss_', int2str(par_offset), '.txt');
+file_name = strcat('multi_ss_tight', int2str(par_offset), '.txt');
 file_multi_ss = fopen(file_name, 'w');
 for i = 1:par_set_num
     [multi_ss_bool(i), multi_ss(:, :, i)] = if_multi_ss(par_base, par_consider_idx, par_consider(i, :));
