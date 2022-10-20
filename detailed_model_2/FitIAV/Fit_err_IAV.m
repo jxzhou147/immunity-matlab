@@ -33,7 +33,7 @@ function err = Fit_err_IAV(data_h, data_m, data_mono, data_neu, data_nk, data_v,
 %     y_23 = real(y_23);
     
     % For ZT11
-    [t, y_11] = ode15s(@ODE_IAV, tspan, y0, [], par_IAV);
+    [t, y_11] = ode15s(@fit_ODE_IAV, tspan, y0, [], par_IAV);
     y_11 = real(y_11);
 
     err = 0;

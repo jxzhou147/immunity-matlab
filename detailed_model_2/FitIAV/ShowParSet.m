@@ -33,7 +33,7 @@ par_infla = par_infla.data;
 numV0 = 20;
 
 
-tmax = 400;
+tmax = 10000;
 tspan = 0:1:tmax;
 y_all = zeros(tmax+1, 18, numV0);   % 1:15, immune vars; 16, weight change; 17, inflammation; 18, survival
 y0_1 = par_IAV(61);
@@ -41,46 +41,45 @@ y0_5 = par_IAV(62);
 y0_8 = par_IAV(63);
 y0_13 = par_IAV(64);
 
-par_var = zeros(numV0, 4);
 survival_min = zeros(numV0, 1);
 
 
-y0 = zeros(16, 1);
-y0(4) = 40;
-y0(1) = y0_1;
-y0(5) = y0_5;
-y0(8) = y0_8;
-y0(13) = y0_13;
-y0(14) = 10;
 
-% p = parpool(20);
+p = parpool(20);
 
-for i = 1:numV0
+parfor i = 1:numV0
     
     infla = zeros(tmax+1, 1);
     survival = zeros(tmax+1, 1);
     
+    par_var = zeros(numV0, 4);
 %     par_var = 10 ^ -4.6;
     par_var(i, 1) = 0.2;
     par_var(i, 2) = 0.0005 * 10;
     par_var(i, 3) = 0.0005 * 10;
     par_var(i, 4) = 0.0005 * 10;
+    
+    y0 = zeros(16, 1);
+    y0(4) = 40;
+    y0(1) = y0_1;
+    y0(5) = y0_5;
+    y0(8) = y0_8;
+    y0(13) = y0_13;
+    y0(14) = 10;
     y0(4) = 100 * (i - 1) + 10;
 
     [t, y] = ode15s(@ODE_IAV, tspan, y0, [], par_IAV, par_var(i, :), [49, 24, 25, 27], par_infla);
     y = real(y);
-    y_all(:, 1:16, i) = y;
     
     for j = 1:(tmax+1)
         infla(j) = inflammation(y(j, 6), y(j, 7), y(j, 8), par_infla);
         survival(j) = (1 - y(j, 16) .^ 5 ./ (24 ^ 5 + y(j, 16) .^ 5));
     end
-    y_all(:, 17, i) = infla;
-    y_all(:, 18, i) = survival;
+    y_all(:, :, i) = [y infla survival];
     
     survival_min(i) = min(survival);
 end
-% delete(p);
+delete(p);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % plot figures
@@ -116,9 +115,10 @@ scatter(data_v(1, :), Safe_log10(data_v(2, :)), 'b');   hold on;
 scatter(data_v(1, :), Safe_log10(data_v(3, :)), 'r');   hold on;
 % plot(tspan, Safe_log10(y_23(:, 4)), 'b', 'LineWidth', 2);  hold on;
 for i = 1:numV0
-    plot(tspan, Safe_log10(y_all(:, 4, i)), 'color', dq(i, :), 'LineWidth', 2);  hold on;
+%     plot(tspan, Safe_log10(y_all(:, 4, i)), 'color', dq(i, :), 'LineWidth', 2);  hold on;
+    plot(tspan, y_all(:, 4, i), 'color', dq(i, :), 'LineWidth', 2);  hold on;
 end
-xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on; set(gca, 'XLim', [0 300]);
+xlabel('Time (h)'); ylabel('Virus (log_{10} pfu)'); hold on;
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
 hold on;
 

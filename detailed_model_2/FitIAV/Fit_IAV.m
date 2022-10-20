@@ -24,7 +24,7 @@ par_bound = importdata('par_IAV_bound.txt');
 lb = par_bound.data(1:60, 1);
 ub = par_bound.data(1:60, 2);
 
-parFit0 = importdata('fitted_par_IAV_11.txt');
+parFit0 = importdata('fitted_par_IAV.txt');
 parFit0 = parFit0.data(1:60);
 
 

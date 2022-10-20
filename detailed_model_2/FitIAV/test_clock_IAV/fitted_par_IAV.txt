@@ -62,3 +62,17 @@ b_H          , 350.000000
 b_M0         , 80.000000
 b_N          , 15.000000
 b_K          , 40.000000
+K_B_M        , 10
+K_BMAL1_IL1b  , 10
+c_P_K        , -10
+K_P_K        , 10
+K_REV_V      , 10
+K_REV_IL1b    , 10
+K_REV_IL10   , 10
+K_REV_CCL2   , 10
+K_REV_CXCL5  , 10
+c_ROR_IL1b    , -10
+K_ROR_IL1b    , 10
+c_IL1b_REV    , -10
+K_IL1b_REV    , 10
+n_IL1b_REV    , 2

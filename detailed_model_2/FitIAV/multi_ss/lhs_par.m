@@ -18,7 +18,7 @@ par_lhs = lhs_rad .* par_bound(:, 1)' + lhs_rad .* (par_bound(:, 2)' - par_bound
 % write lhs parameters to file
 file_par = fopen('lhs_par.txt', 'w');
 for i = 1:N
-    fprintf(file_par, '%f ', par_lhs(i, :));
+    fprintf(file_par, '%.10f ', par_lhs(i, :));
     fprintf(file_par, '\n');
 end
 fclose(file_par);

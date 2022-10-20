@@ -67,12 +67,12 @@ K_BMAL1_IL1b  , 10
 c_P_K        , -10
 K_P_K        , 10
 K_REV_V      , 10
-K_REV_IL1b    , -3
-K_REV_IL10   , -3
-K_REV_CCL2   , -3
-K_REV_CXCL5  , -3
+K_REV_IL1b    , 10
+K_REV_IL10   , 10
+K_REV_CCL2   , 10
+K_REV_CXCL5  , 10
 c_ROR_IL1b    , -10
 K_ROR_IL1b    , 10
 c_IL1b_REV    , -10
-K_IL1b_REV    , 2
+K_IL1b_REV    , 10
 n_IL1b_REV    , 2

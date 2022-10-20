@@ -15,7 +15,7 @@ data_ccl2 = xlsread('data_to_fit.xlsx', 3, 'B37:E39');
 data_v(2:3, :) = 10 .^ data_v(2:3, :);
 
 % load fitted parameter set
-parFit = importdata('best_par_IAV_clock.txt');
+parFit = importdata('fitted_par_IAV.txt');
 parFit = parFit.data;
 
 % translate parFit to par in the odes
