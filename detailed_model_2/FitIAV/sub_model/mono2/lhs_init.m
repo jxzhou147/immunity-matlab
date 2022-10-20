@@ -3,8 +3,8 @@ var_name = ['Mono', 'CCL2'];
 var_num = 2;
 
 var_bound = zeros(2, var_num);
-var_bound(:, 1) = [0; 1e3];
-var_bound(:, 2) = [0; 1e4];
+var_bound(:, 1) = [0; 5e3];
+var_bound(:, 2) = [0; 5e3];
 
 N = 1000;
 

@@ -6,15 +6,16 @@ clear;clc
 par_base = importdata('par_M_init.txt');
 par_base = par_base.data;
 % translate to par in the odes
-log_par_ind = (1:6);
+log_par_ind = (1:7);
 for i = log_par_ind
     par_base(i) = 10 .^ par_base(i);
 end
 
 % load hls parameters
-par_consider_idx = (1:7);
-par_consider = importdata('lhs_M.txt');
-par_consider = par_consider(8, :);
+par_consider_idx = (1:8);
+% par_consider = importdata('multi_ss_par.txt');
+% par_consider = par_consider(31, :);
+par_consider = par_base;
 
 % replace parameters considered with par_consider
 tmp = 1;
@@ -65,4 +66,10 @@ for i = 1:m
 end
 xlabel('Time (h)'); ylabel('CCL2');
 % set(gca, 'XTick', [100:150:400], 'XLim', [100 400], 'YLim', [-0.6 8], 'Fontsize', 26, 'linewidth', 2);
+hold off;
+
+figure;
+for i = 1:m
+    plot(ys(:, 1, i), ys(:, 2, i), 'color', 'k'); hold on;
+end
 hold off;
