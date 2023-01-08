@@ -1,8 +1,10 @@
-function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
+function dydt = ODE_SCG_CLOCK_KO(t, y, par_clock, par_scg, t_V)
 
     % parameters of SCG model
     par_scg = num2cell(par_scg);
-    [beta, k_I, d_I, p_V, c_V, K_BMAL1_V] = deal(par_scg{:});
+    [beta, k_I, d_I, p_V, c_V, ...
+        p_IL6, p_IL1b, p_IL10, d_IL6, d_IL1b, d_IL10, ...
+        c_BMAL1_V, K_BMAL1_V, K_REV_V, K_REV_IL6, K_REV_IL10, K_REV_IL1b] = deal(par_scg{:});
 
     % parameters of clock model
     % mRNA and protein degradation rate constants (in h^-1)
@@ -39,14 +41,14 @@ function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
     
     n_clock = 12; % variable number of clock model
 
-    dydt = zeros(n_clock + 4, 1);     % 0-12 for clock, and then for H, I_1, I_2, V
-
+    dydt = zeros(n_clock + 7, 1);     % 0-12 for clock, and then for scg
+ 
     y_clock = num2cell(y(1:n_clock));
     [Per, Cry, Rev, Ror, Bmal1, PER, CRY, REV, ROR, ...
         BMAL1, PER_CRY, CLOCK_BMAL1] = deal(y_clock{:});
 
-    y_scg = num2cell(y(n_clock+1:n_clock+4));
-    [H, I1, I2, V] = 
+    y_scg = num2cell(y(n_clock+1:n_clock+7));
+    [H, I1, I2, V, IL6, IL1b, IL10] = deal(y_scg{:});
 
 
     % equations of clock model
@@ -98,32 +100,28 @@ function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
     dydt(12) = kass_cb * BMAL1 - kdiss_cb * CLOCK_BMAL1 - d_cb * CLOCK_BMAL1;
 
 
+    % clock knock out
+    for i = 1:12
+        dydt(i) = 0;
+    end
+    
     if (t < t_V)
-        y(n_clock+4) = 0;
+        V = 0;
     end
 
     % ODEs for H, I_1, I_2, V
-    dydt(n_clock+1) = -1 * n_E / tau_E * y(n_clock+1);
-    for i = (n_clock+2):(n_E+n_clock)
-        dydt(i) = n_E / tau_E * y(i-1) - n_E / tau_E * y(i);
-    end
+    dydt(n_clock+1) = -1 * (1 + c_BMAL1_V * BMAL1 / (K_BMAL1_V + BMAL1)) * beta * H * V;
 
-    % ODEs for I_1,...,I_{n_I}
-    dydt(n_E+n_clock+1) = n_E / tau_E * y(n_E+n_clock) - n_I / tau_I * y(n_E+n_clock+1);
-    for j = (n_E+n_clock+2):(n_E+n_I+n_clock)
-        dydt(j) = n_I / tau_I * y(j-1) - n_I / tau_I * y(j);
-    end
+    dydt(n_clock+2) = (1 + c_BMAL1_V * BMAL1 / (K_BMAL1_V + BMAL1)) * beta * H * V - k_I * I1;
 
-    % ODE for V
-    for j = (n_E+n_clock+1):(n_E+n_I+n_clock)
-        dydt(n_E+n_I+n_clock+1) = dydt(n_E+n_I+n_clock+1) + K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_inf * y(j);
-    end
-    dydt(n_E+n_I+n_clock+1) = dydt(n_E+n_I+n_clock+1) - c_inf * y(n_E+n_I+n_clock+1);
+    dydt(n_clock+3) = k_I * I1 - d_I * I2;
 
-    % ODE for B
-    for j = (n_E+n_clock+1):(n_E+n_I+n_clock)
-        dydt(n_E+n_I+n_clock+2) = dydt(n_E+n_I+n_clock+2) + K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_tot * y(j);
-    end
-    dydt(n_E+n_I+n_clock+2) = dydt(n_E+n_I+n_clock+2) - c_B * y(n_E+n_I+n_clock+2);
+    dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V;
+
+    dydt(n_clock+5) = K_REV_IL6 / (K_REV_IL6 + REV) * p_IL6 * I2 - d_IL6 * IL6;
+
+    dydt(n_clock+6) = K_REV_IL1b / (K_REV_IL1b + REV) * p_IL1b * I2 - d_IL1b * IL1b;
+
+    dydt(n_clock+7) = K_REV_IL10 / (K_REV_IL10 + REV) * p_IL10 * I2 - d_IL10 * IL10;
 
 end
