@@ -1,15 +1,15 @@
 # IAV model IAV.ode
-param beta=0.0000004,k_I=1,gamma=1500,eta=0.1,r=10,a_MI=0.001,a_NI=0.001,a_KI=0.003,a_TI=0.008
+param zeta=0.01,beta=0.0000004,k_I=1,gamma=1500,eta=0.1,r=10,a_MI=0.001,a_NI=0.001,a_KI=0.003,a_TI=0.008
 param c_IL1b_Mn=5,c_IL1b_N=1,c_CCL2_Mn=3,c_CXCL5_N=4,c_M_IL1b=0.7,c_I_IL1b=0.5,c_M_IL10=0.6
-param c_M_CCL2=1.8,c_I_CCL2=2,c_N_CXCL5=1,c_I_CXCL5=1.5,c_IK=0.7,c_MT=0.05
-param K_IL1b_Mn=200,K_IL1b_N=1000,K_CCL2_Mn=1000,K_CXCL5_N=300,K_IL10_IL1=1000,K_IL10_CCL=1000,K_IL10_CX=1000,K_IK=100,K_T=10,K_MT=50
-param n_CCL2_Mn=3,n_CXCL5_N=2,n_IK=2,n_MT=2,d_I=0.01,d_V=0.1,d_Mn=0.045,d_N=0.03
-param d_IL1b=0.1,d_IL10=0.1,d_CCL2=0.1,d_CXCL5=0.13,d_K=0.03,d_T=0.01,b_K=40
+param c_M_CCL2=1.8,c_I_CCL2=1.9,c_N_CXCL5=1,c_I_CXCL5=1.5,c_IK=0.7,c_MT=0.05
+param K_V=0.01,K_IL1b_Mn=200,K_IL1b_N=1000,K_CCL2_Mn=1000,K_CXCL5_N=300,K_IL10_IL1=1000,K_IL10_CCL=1000,K_IL10_CX=1000,K_IK=100,K_T=10,K_MT=50
+param n_CCL2_Mn=3,n_CXCL5_N=2,n_IK=2,n_MT=2,d_I=0.01,d_V=0.1,d_Vs=0.1,d_Mn=0.045,d_N=0.03
+param d_IL1b=0.1,d_IL10=0.1,d_CCL2=0.1,d_CXCL5=0.13,d_K=0.03,d_T=0.01,b_H=350,b_K=40
 
-H' = -1 * beta * H * V
+H' = zeta * H * (1 - H / b_H) - beta * H * V
 I1' = beta * H * V - k_I * I1
 I2' = k_I * I1 - a_MI * Mn * I2 - a_NI * N * I2 - a_KI * K * I2 - a_TI * T_E * I2 - d_I * I2
-V' = gamma * I2 - T_E / (T_E +150) * d_V * V
+V' = gamma * I2 - T_E / (T_E +150) * d_V * V - d_Vs * V / (K_V + V)
 Mn' = c_CCL2_Mn * (1 + c_IL1b_Mn * IL1b / (K_IL1b_Mn + IL1b)) * CCL2 ^ n_CCL2_Mn / (K_CCL2_Mn ^ n_CCL2_Mn + CCL2 ^ n_CCL2_Mn) - d_Mn * Mn
 N' = c_CXCL5_N * (1 + c_IL1b_N * IL1b / (K_IL1b_N + IL1b)) * CXCL5 ^ n_CXCL5_N / (K_CXCL5_N ^ n_CXCL5_N + CXCL5 ^ n_CXCL5_N) - d_N * N
 IL1b' = (K_IL10_IL1 / (K_IL10_IL1 + IL10) * c_M_IL1b * Mn + c_I_IL1b * I2) - d_IL1b * IL1b
