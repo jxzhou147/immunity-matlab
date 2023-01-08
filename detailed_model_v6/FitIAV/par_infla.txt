@@ -1,0 +1,10 @@
+sigma_M,    0.1
+sigma_Mono, 0.15
+sigma_N,    0.15
+sigma_I,    0.3
+sigma_Infla,    1
+K_I,    10
+K_In,   10
+n_I,    3
+n_In,   3
+d_wc,   0.05
