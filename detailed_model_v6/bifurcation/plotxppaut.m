@@ -275,7 +275,7 @@ h_SP = plot(temp(:,1),temp1(:,[3 7]));
   xlim([0 3]);
   ylim([-10 400]);
   xlabel('c_{M-CCL2}');
-  ylabel('CCL2');
+  ylabel('Monocytes');
   set(gcf, 'unit', 'centimeters', 'position', [10 5 8 6]);
   plot([1.8 1.8], [-10 400], '--', 'Color', '#DF392A', 'LineWidth', 1.5);
   hold off;
