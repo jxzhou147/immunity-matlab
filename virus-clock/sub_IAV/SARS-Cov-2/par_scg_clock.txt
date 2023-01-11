@@ -1,9 +1,9 @@
 beta, 0.0001
 k_I, 0.15
 d_I, 0.2
-p_V, 33000
-c_V, 0.08
-p_IL6, 100
+p_V, 1000000
+c_V, 0.001
+p_IL6, 500
 p_IL1b, 10
 p_IL10, 10
 d_IL6, 0.1
@@ -11,7 +11,7 @@ d_IL1b, 0.1
 d_IL10, 0.1
 c_BMAL1_V, 1
 K_BMAL1_V, 5
-K_REV_V, 0.02
-K_REV_IL6, 0.02
-K_REV_IL10, 0.02
-K_REV_IL1b, 0.02
+K_REV_V, 0.01
+K_REV_IL6, 0.01
+K_REV_IL10, 0.01
+K_REV_IL1b, 0.01
