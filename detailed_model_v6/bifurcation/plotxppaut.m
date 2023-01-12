@@ -270,12 +270,12 @@ h_SP = plot(temp(:,1),temp1(:,[3 7]));
   
   
   
-  set(gca, 'FontSize', 12); box on;
+  set(gca, 'FontSize', 12, 'FontName', 'Arial'); box on;
 %   set(gca, 'YScale', 'log');
   xlim([0 3]);
   ylim([-10 400]);
-  xlabel('c_{M-CCL2}');
-  ylabel('Monocytes');
+  xlabel('c_{M-CCL2}', 'FontSize', 12, 'FontName', 'Arial');
+  ylabel('Monocytes', 'FontSize', 12, 'FontName', 'Arial');
   set(gcf, 'unit', 'centimeters', 'position', [10 5 8 6]);
   plot([1.8 1.8], [-10 400], '--', 'Color', '#DF392A', 'LineWidth', 1.5);
   hold off;
