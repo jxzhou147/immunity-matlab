@@ -102,7 +102,9 @@ function dydt = ODE_SCG_CLOCK_KO(t, y, par_clock, par_scg, t_V)
 
     % clock knock out
     for i = 1:12
-        dydt(i) = 0;
+%         dydt(i) = 0;
+        BMAL1 = 0;
+        REV = 0;
     end
     
     if (t < t_V)
@@ -116,8 +118,12 @@ function dydt = ODE_SCG_CLOCK_KO(t, y, par_clock, par_scg, t_V)
 
     dydt(n_clock+3) = k_I * I1 - d_I * I2;
 
-    dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V;
-
+    if ((t >= t_V) && (t < (t_V + 1)))
+        dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V + 100;
+    else
+        dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V;
+    end
+    
     dydt(n_clock+5) = K_REV_IL6 / (K_REV_IL6 + REV) * p_IL6 * I2 - d_IL6 * IL6;
 
     dydt(n_clock+6) = K_REV_IL1b / (K_REV_IL1b + REV) * p_IL1b * I2 - d_IL1b * IL1b;

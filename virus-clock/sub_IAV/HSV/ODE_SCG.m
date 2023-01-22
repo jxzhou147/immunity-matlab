@@ -15,6 +15,10 @@ function dydt = ODE_SCG(t, y, par_scg)
 
     dydt(3) = k_I * I1 - d_I * I2;
 
-    dydt(4) = p_V * I2 - c_V * V;
+    if (t < 1)
+        dydt(4) = p_V * I2 - c_V * V + 100;
+    else
+        dydt(4) = p_V * I2 - c_V * V;
+    end
 
 end

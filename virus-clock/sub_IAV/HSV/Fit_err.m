@@ -3,7 +3,7 @@ function err = Fit_err(biolu_data_ko, par_fit)
     % initial values
     y0 = zeros(4, 1);
     y0(1) = 1;
-    y0(4) = 100;
+    y0(4) = 0;
     
     tmax = 100;
     tspan = 0:0.1:tmax;

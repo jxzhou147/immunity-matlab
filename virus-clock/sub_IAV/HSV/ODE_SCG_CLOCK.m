@@ -109,6 +109,10 @@ function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
 
     dydt(n_clock+3) = k_I * I1 - d_I * I2;
 
-    dydt(n_clock+4) = K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_V * I2 - c_V * V;
-
+%     dydt(n_clock+4) = K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_V * I2 - c_V * V;
+    if ((t >= t_V) && (t < (t_V + 1)))
+        dydt(n_clock+4) = K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_V * I2 - c_V * V + 100;
+    else
+        dydt(n_clock+4) = K_BMAL1_V / (K_BMAL1_V + BMAL1) * p_V * I2 - c_V * V;
+    end
 end

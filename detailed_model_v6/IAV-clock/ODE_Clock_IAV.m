@@ -113,8 +113,12 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
     
     dydt(15) = k_I * I1 - a_MI * Mono * I2 - a_NI * N * I2 - a_KI  * K * I2 - a_TI * T_E * I2 - d_I * I2;
 
-%     dydt(16) = gamma * I2 - d_V * V - d_Vs * V / (K_V + V);
-    dydt(16) = FracNoInf(K_REV_V, K_REV_V + REV) * gamma * I2 - T_E / (T_E + 150) *  d_V * V - d_Vs * V / (K_V + V);
+    if ((t >= t_IAV) && (t < (t_IAV + 1)))
+        dydt(16) = FracNoInf(K_REV_V, K_REV_V + REV) * gamma * I2 - T_E / (T_E + 150) *  d_V * V - d_Vs * V / (K_V + V) + 100;
+    else
+        dydt(16) = FracNoInf(K_REV_V, K_REV_V + REV) * gamma * I2 - T_E / (T_E + 150) *  d_V * V - d_Vs * V / (K_V + V);
+    end
+%     dydt(16) = FracNoInf(K_REV_V, K_REV_V + REV) * gamma * I2 - T_E / (T_E + 150) *  d_V * V - d_Vs * V / (K_V + V);
   
     dydt(17) = c_CCL2_Mono * (1 + c_IL1b_Mono * FracNoInf(IL1b, (K_IL1b_Mono + IL1b))) * ...
         FracNoInf(RealRootPromise(CCL2, n_CCL2_Mono), RealRootPromise(K_CCL2_Mono, n_CCL2_Mono) + RealRootPromise(CCL2, n_CCL2_Mono)) - d_Mono * Mono;

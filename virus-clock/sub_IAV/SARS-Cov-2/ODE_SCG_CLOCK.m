@@ -50,7 +50,7 @@ function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
     y_scg = num2cell(y(n_clock+1:n_clock+7));
     [H, I1, I2, V, IL6, IL1b, IL10] = deal(y_scg{:});
 
-
+    
     % equations of clock model
     dydt(1) = -1 * dm_per * Per + vmax_per * ( ...
         1 + fold_per * power(CLOCK_BMAL1 / Ka_per_cb, hill_per_cb)) / ( ...
@@ -111,7 +111,11 @@ function dydt = ODE_SCG_CLOCK(t, y, par_clock, par_scg, t_V)
 
     dydt(n_clock+3) = k_I * I1 - d_I * I2;
 
-    dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V;
+    if ((t >= t_V) && (t < (t_V + 1)))
+        dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V + 100;
+    else
+        dydt(n_clock+4) = K_REV_V / (K_REV_V + REV) * p_V * I2 - c_V * V;
+    end
 
     dydt(n_clock+5) = K_REV_IL6 / (K_REV_IL6 + REV) * p_IL6 * I2 - d_IL6 * IL6;
 
