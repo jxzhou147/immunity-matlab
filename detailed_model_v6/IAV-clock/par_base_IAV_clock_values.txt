@@ -17,7 +17,7 @@ c_I_IL1b    , 0.5
 c_M_IL10    , 0.6
 c_M_CCL2    , 1.8
 c_I_CCL2    , 1.9
-c_N_CXCL5   , 1
+c_N_CXCL5   , 0.5
 c_I_CXCL5   , 1.5
 c_I_K        , 0.7
 c_M_T        , 0.05

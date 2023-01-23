@@ -1,4 +1,4 @@
-function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
+function dydt = ODE_Clock_IAV_phase(t, y, par_clock, par_IAV, t_IAV)
     
     dydt = zeros(25, 1);    % 1:12 for clock ODEs and 13:25 for IAV ODEs
     
@@ -134,12 +134,12 @@ function dydt = ODE_Clock_IAV(t, y, par_clock, par_IAV, t_IAV)
 %     dydt(21) = FracNoInf(K_BMAL1_CCL2, K_BMAL1_CCL2 + BMAL1) * FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * Mono + ...
 %         FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * c_I_CCL2 * I2 - d_CCL2 * CCL2;
     dydt(21) = FracNoInf(K_BMAL1_CCL2, K_BMAL1_CCL2 + BMAL1) * FracNoInf(K_IL10_CCL2, K_IL10_CCL2 + IL10) * c_M_CCL2 * Mono + ...
-        FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * (c_I_CCL2 * I2 + 0.02 * H) - d_CCL2 * CCL2;
+        FracNoInf(K_REV_CCL2, K_REV_CCL2 + REV) * c_I_CCL2 * I2 + FracNoInf(K_REV_CCL2, K_REV_CCL2 + (0.02 - REV)) * 0.02 * H - d_CCL2 * CCL2;
 
 %     dydt(22) = FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
 %         c_I_CXCL5 * I2 - d_CXCL5 * CXCL5;
     dydt(22) = FracNoInf(K_IL10_CXCL5, K_IL10_CXCL5 + IL10) * c_N_CXCL5 * N + ...
-        FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * (c_I_CXCL5 * I2 + 0.01 * H) - d_CXCL5 * CXCL5;
+        FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + REV) * c_I_CXCL5 * I2 + FracNoInf(K_REV_CXCL5, K_REV_CXCL5 + (0.02 - REV)) * 0.01 * H - d_CXCL5 * CXCL5;
 
     dydt(23) = c_I_K * FracNoInf(RealRootPromise(I2, n_I_K), RealRootPromise(K_I_K, n_I_K) + RealRootPromise(I2, n_I_K)) - d_K * (K - b_K);
 
