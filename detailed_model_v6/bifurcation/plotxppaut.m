@@ -39,8 +39,10 @@
 %       USER DEFINED PARAMETERS -- CHANGE TO CUSTOMIZE OUTPUT PLOT
 %-------------------------------------------------------------------
 %Colors -- SHOULD BE VALID MATLAB COLORS
-C_Ss = 'Black';   %STABLE STEADY STATE
-C_Us = 'Black';   %UNSTABLE STEADY STATE
+% C_Ss = 'Black';   %STABLE STEADY STATE
+% C_Us = 'Black';   %UNSTABLE STEADY STATE
+C_Ss = "#7E2F8E";   %STABLE STEADY STATE
+C_Us = "#7E2F8E";   %UNSTABLE STEADY STATE
 C_Sp = 'Red';     %STABLE PERIODIC ORBIT
 C_Up = 'Blue';    %UNSTABLE PERIODIC ORBIT
 
@@ -52,7 +54,7 @@ Lt_Up = '--';    %UNSTABLE PERIODIC ORBIT
 
 %Linewidths
 Lw_Ss = 1.5;   %STABLE STEADY STATE
-Lw_Us = 1;     %UNSTABLE STEADY STATE
+Lw_Us = 1.5;     %UNSTABLE STEADY STATE
 Lw_Sp = 1;     %STABLE PERIODIC ORBIT
 Lw_Up = 1;     %UNSTABLE PERIODIC ORBIT
 
@@ -126,6 +128,18 @@ if(file_name)
   
   
 % $$$ figure;
+% plot normal-smaller amplitude-clock ko
+%   plot([1.8 1.8], [-10 400], 'Color', '#DF392A', 'LineWidth', 1.5);
+  % dark region for normal clock
+  ymin = -10; ymax = 400;
+  v2_normal = [0.660 ymin; 1.462 ymin; 1.462 ymax; 0.660 ymax];
+  f2_normal = [1 2 3 4];
+  patch('Faces', f2_normal,'Vertices', v2_normal, 'FaceColor', 'black', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
+  % dark region for smaller amplitude
+%   v2_sa = [0.947 ymin; 1.480 ymin; 1.480 ymax; 0.947 ymax];
+%   f2_sa = [1 2 3 4];
+%   patch('Faces', f2_sa,'Vertices', v2_sa, 'FaceColor', '#425CAA', 'FaceAlpha', 0.5, 'EdgeColor', 'none');
+  hold on;
 %	-----------------------------------------  
   h_SS = plot(temp(:,1),temp1(:,[1 5]));
   set(h_SS,'color',C_Ss)
@@ -230,6 +244,7 @@ if(file_name)
   
   
 % $$$ figure;
+
 %	-----------------------------------------  
   h_SS = plot(temp(:,1),temp1(:,[1 5]));
   set(h_SS,'color',C_Ss)
@@ -280,16 +295,16 @@ h_SP = plot(temp(:,1),temp1(:,[3 7]));
 %   plot([1.8 1.8], [-10 400], '--', 'Color', '#DF392A', 'LineWidth', 1.5);
 
   % plot normal-smaller amplitude-clock ko
-  plot([1.8 1.8], [-10 400], 'Color', '#DF392A', 'LineWidth', 1.5);
+%   plot([1.8 1.8], [-10 400], 'Color', '#DF392A', 'LineWidth', 1.5);
   % dark region for normal clock
   ymin = -10; ymax = 400;
   v2_normal = [0.660 ymin; 1.462 ymin; 1.462 ymax; 0.660 ymax];
   f2_normal = [1 2 3 4];
-  patch('Faces', f2_normal,'Vertices', v2_normal, 'FaceColor', 'black', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
+%   patch('Faces', f2_normal,'Vertices', v2_normal, 'FaceColor', 'black', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
   % dark region for smaller amplitude
   v2_sa = [0.947 ymin; 1.480 ymin; 1.480 ymax; 0.947 ymax];
   f2_sa = [1 2 3 4];
-  patch('Faces', f2_sa,'Vertices', v2_sa, 'FaceColor', '#425CAA', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
+%   patch('Faces', f2_sa,'Vertices', v2_sa, 'FaceColor', '#425CAA', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
 
   hold off;
 %   title(file_in);
