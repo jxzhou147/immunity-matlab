@@ -129,16 +129,16 @@ if(file_name)
   
 % $$$ figure;
 % plot normal-smaller amplitude-clock ko
-%   plot([1.8 1.8], [-10 400], 'Color', '#DF392A', 'LineWidth', 1.5);
+  plot([1.8 1.8], [-10 400], 'Color', '#DF392A', 'LineWidth', 1.5);
   % dark region for normal clock
   ymin = -10; ymax = 400;
-  v2_normal = [0.660 ymin; 1.462 ymin; 1.462 ymax; 0.660 ymax];
-  f2_normal = [1 2 3 4];
-  patch('Faces', f2_normal,'Vertices', v2_normal, 'FaceColor', 'black', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
+%   v2_normal = [0.660 ymin; 1.462 ymin; 1.462 ymax; 0.660 ymax];
+%   f2_normal = [1 2 3 4];
+%   patch('Faces', f2_normal,'Vertices', v2_normal, 'FaceColor', 'black', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
   % dark region for smaller amplitude
-%   v2_sa = [0.947 ymin; 1.480 ymin; 1.480 ymax; 0.947 ymax];
-%   f2_sa = [1 2 3 4];
-%   patch('Faces', f2_sa,'Vertices', v2_sa, 'FaceColor', '#425CAA', 'FaceAlpha', 0.5, 'EdgeColor', 'none');
+  v2_sa = [0.947 ymin; 1.480 ymin; 1.480 ymax; 0.947 ymax];
+  f2_sa = [1 2 3 4];
+  patch('Faces', f2_sa,'Vertices', v2_sa, 'FaceColor', '#425CAA', 'FaceAlpha', 0.5, 'EdgeColor', 'none');
   hold on;
 %	-----------------------------------------  
   h_SS = plot(temp(:,1),temp1(:,[1 5]));
